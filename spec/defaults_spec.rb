@@ -21,6 +21,17 @@ describe Capistrano::Fanfare::Defaults do
     @config.fetch(:user).must_equal "deploy"
   end
 
+  it "sets :rake to 'bundle exec rake'" do
+    @config.fetch(:rake).must_equal "bundle exec rake"
+  end
+
+  it "sets :deploy_to to a directory containing :application and :deploy_env" do
+    @config.set :application, "fizzy"
+    @config.set :deploy_env,  "staging"
+
+    @config.fetch(:deploy_to).must_equal "/srv/fizzy_staging"
+  end
+
   describe ":branch" do
     it "sets to master by default" do
       @config.fetch(:branch).must_equal "master"
