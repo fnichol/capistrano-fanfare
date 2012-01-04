@@ -6,7 +6,7 @@ module Capistrano::Fanfare ; end
 describe Capistrano::Fanfare do
   before do
     @config = Capistrano::Configuration.new
-    @config.load_paths << File.join(File.dirname(__FILE__), "recipes")
+    @config.load_paths << File.join(File.dirname(__FILE__), "fixtures")
     Capistrano::Configuration.instance = @config
   end
 
