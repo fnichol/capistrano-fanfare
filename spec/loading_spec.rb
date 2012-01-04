@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require 'capistrano'
+require 'capistrano/fanfare'
 
 module Capistrano::Fanfare ; end
 
@@ -7,13 +7,12 @@ describe Capistrano::Fanfare do
   before do
     @config = Capistrano::Configuration.new
     @config.load_paths << File.join(File.dirname(__FILE__), "fixtures")
+    @orig_config = Capistrano::Configuration.instance
     Capistrano::Configuration.instance = @config
   end
 
-  it 'load_paths include capistrano/ in gem' do
-    require 'capistrano/fanfare'
-    @config.load_paths.must_include File.expand_path(
-      File.join(File.dirname(__FILE__), %w{.. lib capistrano}))
+  after do
+    Capistrano::Configuration.instance = @orig_config
   end
 
   it 'loads a fanfare capistrano recipe' do
