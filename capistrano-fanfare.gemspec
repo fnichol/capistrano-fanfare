@@ -17,4 +17,6 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "capistrano", "~> 2.9"
   gem.add_dependency "capistrano_colors", "~> 0.5"
+
+  gem.add_development_dependency "minitest", "~> 2.10.0"
 end
