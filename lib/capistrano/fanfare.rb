@@ -1,4 +1,4 @@
-require "capistrano-fanfare/version"
+require "capistrano/fanfare/version"
 
 module Capistrano
   module Fanfare
