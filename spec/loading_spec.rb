@@ -1,8 +1,6 @@
 require 'minitest/autorun'
 require 'capistrano/fanfare'
 
-module Capistrano::Fanfare ; end
-
 describe Capistrano::Fanfare do
   before do
     @config = Capistrano::Configuration.new

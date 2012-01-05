@@ -2,6 +2,10 @@ require 'minitest/autorun'
 require 'capistrano/fanfare'
 require 'capistrano/fanfare/defaults'
 
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each do |f|
+  require File.expand_path(f)
+end
+
 describe Capistrano::Fanfare::Defaults do
   before do
     @config = Capistrano::Configuration.new
