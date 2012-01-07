@@ -7,5 +7,16 @@ end
 
 module Capistrano
   module Fanfare
+    module Configuration
+      def fanfare_recipe(recipe)
+        require "capistrano/fanfare/#{recipe}"
+      end
+    end
+  end
+end
+
+module Capistrano
+  class Configuration
+    include Capistrano::Fanfare::Configuration
   end
 end

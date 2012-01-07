@@ -1,3 +1,5 @@
+require 'capistrano'
+
 module Capistrano::Fanfare::Defaults
   def self.load_into(configuration)
     configuration.load do

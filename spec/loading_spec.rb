@@ -19,4 +19,8 @@ describe Capistrano::Fanfare do
     @config.find_and_execute_task("bark").must_equal "ruff ruff"
     @config.fetch(:message).must_equal "ruff ruff"
   end
+
+  it 'adds #fanfare_recipe onto Capistrano::Configuration' do
+    @config.must_respond_to :fanfare_recipe
+  end
 end
