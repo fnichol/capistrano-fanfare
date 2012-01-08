@@ -9,6 +9,9 @@ module Capistrano::Fanfare::Defaults
       set :rake,        "bundle exec rake"
       set(:branch)      { ENV['BRANCH'] ? ENV['BRANCH'] : "master" }
       set(:deploy_to)   { "/srv/#{application}_#{deploy_env}" }
+      set :ssh_options, { :forward_agent => true }
+
+      default_run_options[:pty] = true
 
       ##
       # Determines deployment environment or run mode to help database naming,

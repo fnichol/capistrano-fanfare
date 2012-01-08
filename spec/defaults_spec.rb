@@ -25,6 +25,10 @@ describe Capistrano::Fanfare::Defaults do
     @config.fetch(:rake).must_equal "bundle exec rake"
   end
 
+  it "sets :ssh_options to include :forward_agent => true" do
+    @config.fetch(:ssh_options)[:forward_agent].must_equal true
+  end
+
   it "sets :deploy_to to a directory containing :application and :deploy_env" do
     @config.set :application, "fizzy"
     @config.set :deploy_env,  "staging"
@@ -102,5 +106,9 @@ describe Capistrano::Fanfare::Defaults do
 
       @config.fetch(:deploy_env).must_equal "production"
     end
+  end
+
+  it "sets :pty = true for default_run_options" do
+    @config.default_run_options[:pty].must_equal true
   end
 end
