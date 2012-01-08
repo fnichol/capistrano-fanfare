@@ -61,7 +61,8 @@ module Capistrano::Fanfare::GitStyle
           pending migrations, and then instead of invoking `deploy:restart', it \
           will invoke `deploy:start' to fire up the application servers.
 
-          [NOTE] This overides the capistrano default by adding the "db:seed".
+          [NOTE] This overides the capistrano default by calling the "db:seed" \
+          task, if it is defined.
         DESC
         task :cold do
           update
