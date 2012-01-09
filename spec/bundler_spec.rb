@@ -23,6 +23,8 @@ describe Capistrano::Fanfare::Bundler do
     @config.extend(MiniTest::Capistrano::ConfigurationExtension)
     @orig_config = Capistrano::Configuration.instance
     Capistrano::Configuration.instance = @config
+
+    @config.set :current_release, "/srv/gemmy/releases/thisone"
   end
 
   after do
@@ -31,8 +33,6 @@ describe Capistrano::Fanfare::Bundler do
 
   describe "for variables" do
     it "sets :bundle_cmd to use bin/bundle" do
-      @config.set :current_release, "/srv/gemmy/releases/thisone"
-
       @config.fetch(:bundle_cmd).must_equal "/srv/gemmy/releases/thisone/bin/bundle"
     end
 
@@ -57,6 +57,26 @@ require 'rubygems'
 
 load Gem.bin_path('bundler', 'bundle')
       BINSTUB
+    end
+
+    it "sets :rake to use bin/rake" do
+      @config.fetch(:rake).must_equal "/srv/gemmy/releases/thisone/bin/rake"
+    end
+
+    describe ":bundle_flags" do
+      it "contains --deployment" do
+        @config.fetch(:bundle_flags).must_match /--deployment/
+      end
+
+      it "contains --binstubs" do
+        @config.fetch(:bundle_flags).must_match /--binstubs/
+      end
+
+      it "contains --shebang <shebang_bin>" do
+        @config.set :bundle_shebang, "bangbang"
+
+        @config.fetch(:bundle_flags).must_match /--shebang bangbang/
+      end
     end
   end
 end

@@ -5,6 +5,7 @@ module Capistrano::Fanfare::Bundler
     configuration.load do
       set(:bundle_cmd)      { "#{current_release}/bin/bundle" }
       set :bundle_shebang,  "ruby-local-exec"
+      set(:bundle_flags)    { "--deployment --binstubs --shebang #{bundle_shebang}" }
 
       set :bundle_binstub_template do
         <<-BINSTUB.gsub(/^ {10}/, '')
@@ -24,6 +25,8 @@ module Capistrano::Fanfare::Bundler
       end
 
       require 'bundler/capistrano'
+
+      set(:rake)  { "#{current_release}/bin/rake" }
     end
   end
 end
