@@ -8,8 +8,9 @@ require 'capistrano/fanfare/bundler'
 # private methods which will cause a method/task namespace collision when the
 # `bundle:install' task is created.
 #
-# So, if we are in a Rake context, nuke :install in Namespace--we won't be
-# it directly in this codebase but this feels so very, very wrong.
+# So, if we are in a Rake context, nuke :install in the Namespace class--we
+# won't be using it directly in this codebase but this feels so very, very
+# wrong (here be dragons).
 #
 if defined?(Rake::DSL)
   Capistrano::Configuration::Namespaces::Namespace.class_eval { undef :install }
