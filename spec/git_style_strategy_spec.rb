@@ -36,6 +36,6 @@ describe Capistrano::Deploy::Strategy::GitStyle do
       "fi && ",
       "(mkdir -p /u/apps/fooapp/releases/20120101020304-gitABC123)"
     ]
-    @config.runs[cmd.join].wont_be_nil(runs_msg(cmd.join))
+    @config.must_have_run cmd.join, runs_msg(cmd.join)
   end
 end

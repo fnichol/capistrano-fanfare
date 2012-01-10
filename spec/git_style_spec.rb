@@ -157,7 +157,7 @@ describe Capistrano::Fanfare::GitStyle do
           "if [ `(cd /u/apps/rofl/current && git rev-parse HEAD)` != `gitAAA` ]; " +
           "then rm -rf /u/apps/rofl/releases/20120101020304-gitAAA; fi"
         ]
-        @config.runs[cmd.join].wont_be_nil(runs_msg(cmd.join))
+        @config.must_have_run cmd.join, runs_msg(cmd.join)
       end
     end
   end
