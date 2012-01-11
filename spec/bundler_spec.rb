@@ -79,4 +79,14 @@ load Gem.bin_path('bundler', 'bundle')
       end
     end
   end
+
+  describe "for namespace :bundle" do
+    it "creates a bundle:install task" do
+      @config.must_have_task "bundle:install"
+    end
+
+    it "calls bundle:install task after deploy:finalize_update" do
+      @config.must_have_callback_after "deploy:finalize_update", "bundle:install"
+    end
+  end
 end
