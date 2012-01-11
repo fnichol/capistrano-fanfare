@@ -72,7 +72,7 @@ describe Capistrano::Fanfare::GitStyle do
     it "task :create_symlink must not run anything (no-op)" do
       @config.find_and_execute_task("deploy:create_symlink")
 
-      @config.runs.must_be_empty
+      @config.wont_have_run_anything
     end
 
     describe "task :cold" do
