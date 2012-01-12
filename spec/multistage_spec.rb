@@ -2,6 +2,7 @@ require 'minitest/autorun'
 require 'minitest/capistrano'
 require 'capistrano/fanfare'
 require 'capistrano/fanfare/multistage'
+require 'stringio'
 
 describe Capistrano::Fanfare::Multistage do
   before do
@@ -38,6 +39,19 @@ describe Capistrano::Fanfare::Multistage do
       @config.must_have_task :dev
       @config.must_have_task :prod
       @config.must_have_task :chickens
+    end
+
+    it ":all_stages shows a list of all valid stages" do
+      io = StringIO.new
+      @config.logger = Capistrano::Logger.new(:output => io)
+      @config.find_and_execute_task("all_stages")
+
+      io.string.must_equal [
+        "*** Valid stages are:",
+        "*** ",
+        "*** * staging",
+        "*** * production"
+      ].join("\n").concat("\n")
     end
   end
 end

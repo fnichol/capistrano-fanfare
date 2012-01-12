@@ -13,6 +13,20 @@ module Capistrano::Fanfare::Multistage
       _cset :default_stage,   "staging"
 
       require 'capistrano/ext/multistage'
+
+      # =========================================================================
+      # These are the tasks that are available to help with deploying web apps,
+      # and specifically, Rails applications. You can have cap give you a summary
+      # of them with `cap -T'.
+      # =========================================================================
+
+      desc <<-DESC
+        Lists all valid deployment environments.
+      DESC
+      task :all_stages, :roles => :app, :except => { :no_release => true } do
+        logger.important "Valid stages are:\n\n"
+        fetch(:stages, []).each { |s| logger.important "* #{s}" }
+      end
     end
   end
 end
