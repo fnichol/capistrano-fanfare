@@ -1,4 +1,5 @@
 require 'minitest/autorun'
+require 'minitest/capistrano'
 require 'capistrano/fanfare'
 require 'capistrano/fanfare/defaults'
 
@@ -6,6 +7,7 @@ describe Capistrano::Fanfare::Defaults do
   before do
     @config = Capistrano::Configuration.new
     Capistrano::Fanfare::Defaults.load_into(@config)
+    @config.extend(MiniTest::Capistrano::ConfigurationExtension)
     ENV['BRANCH'] = nil
   end
 
@@ -110,5 +112,25 @@ describe Capistrano::Fanfare::Defaults do
 
   it "sets :pty = true for default_run_options" do
     @config.default_run_options[:pty].must_equal true
+  end
+
+  describe ":os_type" do
+    it "set to :darwin for Mac OS" do
+      @config.captures_responses["uname -s"] = "Darwin\n"
+
+      @config.fetch(:os_type).must_equal :darwin
+    end
+
+    it "set to :linunx for Linux-based OSes" do
+      @config.captures_responses["uname -s"] = "Linux\n"
+
+      @config.fetch(:os_type).must_equal :linux
+    end
+
+    it "set to :sunos for Solaris-based OSes" do
+      @config.captures_responses["uname -s"] = "SunOS\n"
+
+      @config.fetch(:os_type).must_equal :sunos
+    end
   end
 end

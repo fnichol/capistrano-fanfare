@@ -10,6 +10,7 @@ module Capistrano::Fanfare::Defaults
       set(:branch)      { ENV['BRANCH'] ? ENV['BRANCH'] : "master" }
       set(:deploy_to)   { "/srv/#{application}_#{deploy_env}" }
       set :ssh_options, { :forward_agent => true }
+      set(:os_type)     { capture("uname -s").chomp.downcase.to_sym }
 
       default_run_options[:pty] = true
 
