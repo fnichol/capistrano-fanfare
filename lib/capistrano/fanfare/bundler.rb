@@ -42,6 +42,34 @@ module Capistrano::Fanfare::Bundler
       require 'bundler/capistrano'
 
       set(:rake)  { "#{current_release}/bin/rake" }
+
+      # =========================================================================
+      # These are the tasks that are available to help with deploying web apps.
+      # You can have cap give you a summary of them with `cap -T'.
+      # =========================================================================
+
+      namespace :bundle do
+        desc <<-DESC
+          [internal] Creates a binstub script for the bundle command.
+        DESC
+        task :create_binstub_script, :roles => :app, :except => { :no_release => true } do
+          run "mkdir -p #{fetch(:shared_path)}/bin"
+          put fetch(:bundle_binstub_template), "#{fetch(:shared_path)}/bin/bundle"
+        end
+
+        desc <<-DESC
+          [internal] Copies bin/bundle from shared_path into current_path.
+        DESC
+        task :cp_bundle_binstub, :roles => :app, :except => { :no_release => true } do
+          run [
+            "mkdir -p #{current_path}/bin",
+            "cp #{shared_path}/bin/bundle #{current_path}/bin/bundle"
+          ].join(" && ")
+        end
+      end
+
+      after "deploy:setup", "bundle:create_binstub_script"
+      after "deploy:update_code", "bundle:cp_bundle_binstub"
     end
   end
 end

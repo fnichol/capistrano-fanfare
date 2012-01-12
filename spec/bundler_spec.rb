@@ -119,5 +119,37 @@ load Gem.bin_path('bundler', 'bundle')
     it "calls bundle:install task after deploy:finalize_update" do
       @config.must_have_callback_after "deploy:finalize_update", "bundle:install"
     end
+
+    describe "task :create_binstub_script" do
+      it "creates bin/bundle binstub script" do
+        @config.set :shared_path, "/tmp/app/shared"
+        @config.set :bundle_binstub_template, "thescript"
+        @config.find_and_execute_task("bundle:create_binstub_script")
+
+        @config.must_have_run "mkdir -p /tmp/app/shared/bin"
+        @config.must_have_put "/tmp/app/shared/bin/bundle", "thescript"
+      end
+
+      it "gets called after deploy:setup task" do
+        @config.must_have_callback_after "deploy:setup", "bundle:create_binstub_script"
+      end
+    end
+
+    describe "task :cp_bundle_binstub" do
+      it "copies bin/bundle into current_path" do
+        @config.set :shared_path, "/tmp/app/shared"
+        @config.set :current_path, "/tmp/app/current"
+        @config.find_and_execute_task("bundle:cp_bundle_binstub")
+
+        @config.must_have_run [
+          "mkdir -p /tmp/app/current/bin",
+          "cp /tmp/app/shared/bin/bundle /tmp/app/current/bin/bundle"
+        ].join(" && ")
+      end
+
+      it "gets called after deploy:update_code task" do
+        @config.must_have_callback_after "deploy:update_code", "bundle:cp_bundle_binstub"
+      end
+    end
   end
 end
