@@ -64,6 +64,10 @@ load Gem.bin_path('bundler', 'bundle')
     end
 
     describe ":bundle_flags" do
+      after do
+        ENV.delete('VERBOSE')
+      end
+
       it "contains --deployment" do
         @config.fetch(:bundle_flags).must_match /--deployment/
       end
@@ -76,6 +80,16 @@ load Gem.bin_path('bundler', 'bundle')
         @config.set :bundle_shebang, "bangbang"
 
         @config.fetch(:bundle_flags).must_match /--shebang bangbang/
+      end
+
+      it "contains --quiet by default" do
+        @config.fetch(:bundle_flags).must_match /--quiet/
+      end
+
+      it "does not contain --quiet if ENV['VERSBOSE'] is set" do
+        ENV['VERBOSE'] = "yes"
+
+        @config.fetch(:bundle_flags).wont_match /--quiet/
       end
     end
   end

@@ -5,7 +5,14 @@ module Capistrano::Fanfare::Bundler
     configuration.load do
       set(:bundle_cmd)      { "#{current_release}/bin/bundle" }
       set :bundle_shebang,  "ruby-local-exec"
-      set(:bundle_flags)    { "--deployment --binstubs --shebang #{bundle_shebang}" }
+
+      set(:bundle_flags) do
+        flags = "--deployment"
+        flags << " --quiet" unless ENV['VERBOSE']
+        flags << " --binstubs"
+        flags << " --shebang #{bundle_shebang}"
+        flags
+      end
 
       set :bundle_binstub_template do
         <<-BINSTUB.gsub(/^ {10}/, '')
