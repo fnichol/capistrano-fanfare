@@ -114,6 +114,10 @@ describe Capistrano::Fanfare::Defaults do
     @config.default_run_options[:pty].must_equal true
   end
 
+  it "sets :os_types to a list of OSes" do
+    @config.fetch(:os_types).must_equal [:darwin, :linux, :sunos]
+  end
+
   describe ":os_type" do
     it "set to :darwin for Mac OS" do
       @config.captures_responses["uname -s"] = "Darwin\n"
