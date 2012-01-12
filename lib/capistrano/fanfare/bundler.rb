@@ -14,6 +14,14 @@ module Capistrano::Fanfare::Bundler
         flags
       end
 
+      set(:bundle_without) do
+        without = [:development, :test]
+        if exists?(:os_type) && exists?(:os_types)
+          without += (fetch(:os_types) - Array(fetch(:os_type)))
+        end
+        without
+      end
+
       set :bundle_binstub_template do
         <<-BINSTUB.gsub(/^ {10}/, '')
           #!/usr/bin/env #{bundle_shebang}

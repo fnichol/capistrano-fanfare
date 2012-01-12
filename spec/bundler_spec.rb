@@ -92,6 +92,23 @@ load Gem.bin_path('bundler', 'bundle')
         @config.fetch(:bundle_flags).wont_match /--quiet/
       end
     end
+
+    describe ":bundle_without" do
+      it "contains :development and :test groups" do
+        @config.fetch(:bundle_without).must_include :development
+        @config.fetch(:bundle_without).must_include :test
+      end
+
+      it "contains all other values from :os_types if the :os_type variable exists" do
+        @config.set :os_types, [:fizz, :buzz, :rocketships]
+        @config.set :os_type, :rocketshipos
+
+        @config.fetch(:bundle_without).must_include :fizz
+        @config.fetch(:bundle_without).must_include :buzz
+        @config.fetch(:bundle_without).must_include :development
+        @config.fetch(:bundle_without).must_include :test
+      end
+    end
   end
 
   describe "for namespace :bundle" do
