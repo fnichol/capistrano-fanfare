@@ -53,8 +53,8 @@ module Capistrano::Fanfare::Bundler
           [internal] Creates a binstub script for the bundle command.
         DESC
         task :create_binstub_script, :roles => :app, :except => { :no_release => true } do
-          run "mkdir -p #{fetch(:shared_path)}/bin"
-          put fetch(:bundle_binstub_template), "#{fetch(:shared_path)}/bin/bundle"
+          run "mkdir -p #{shared_path}/bin"
+          put bundle_binstub_template, "#{shared_path}/bin/bundle"
         end
 
         desc <<-DESC
