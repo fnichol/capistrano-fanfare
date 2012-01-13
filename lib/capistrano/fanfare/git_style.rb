@@ -7,6 +7,7 @@ module Capistrano::Fanfare::GitStyle
       set :scm,             :git
       set :deploy_via,      :git_style
       set(:release_name)    { %{#{Time.now.utc.strftime("%Y%m%d%H%M%S")}-#{real_revision}} }
+      set(:release_path)    { current_path }
       set(:latest_release)  { current_path }
 
       set(:current_revision) {
@@ -20,6 +21,26 @@ module Capistrano::Fanfare::GitStyle
                 :except => { :no_release => true }).chomp if previous_release }
 
       namespace :deploy do
+        desc <<-DESC
+          Copies your project to the remote servers. This is the first stage \
+          of any deployment; moving your updated code and assets to the deployment \
+          servers. You will rarely call this task directly, however; instead, you \
+          should call the `deploy' task (to do a complete deploy) or the `update' \
+          task (if you want to perform the `restart' task separately).
+
+          You will need to make sure you set the :scm variable to the source \
+          control software you are using (it defaults to :subversion), and the \
+          :deploy_via variable to the strategy you want to use to deploy (it \
+          defaults to :checkout).
+
+          [NOTE] This overrides the capistrano default by removing the \
+          on_rollback logic since previous release checkouts don't exist.
+        DESC
+        task :update_code, :except => { :no_release => true } do
+          strategy.deploy!
+          finalize_update
+        end
+
         desc <<-DESC
           [internal] No-op for git-based deployments.
 

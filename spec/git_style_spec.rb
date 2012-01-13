@@ -32,6 +32,10 @@ describe Capistrano::Fanfare::GitStyle do
       end
     end
 
+    it "sets :release_path to :current_path" do
+      @config.fetch(:release_path).must_equal @config.fetch(:current_path)
+    end
+
     it "sets :latest_release to :current_path" do
       @config.fetch(:latest_release).must_equal @config.fetch(:current_path)
     end
@@ -69,6 +73,31 @@ describe Capistrano::Fanfare::GitStyle do
   end
 
   describe "for namespace :deploy" do
+    describe "task :update_code" do
+      before do
+        @config.load do
+          def methods_called ; @methods_called ||= [] ; end
+
+          namespace :deploy do
+            task(:finalize_update) { methods_called << "deploy:finalize_update" }
+          end
+        end
+
+        # stub out strategy.deploy!
+        strategy = @config.strategy
+        def strategy.deploy! ; methods_called << "strategy.deploy!" ; end
+
+        # stub out on_rollback
+        def @config.on_rollback ; methods_called << "on_rollback" ; end
+      end
+
+      it "calls same tasks as delivered gem code" do
+        @config.find_and_execute_task("deploy:update_code")
+
+        @config.methods_called.must_equal(["strategy.deploy!", "deploy:finalize_update"])
+      end
+    end
+
     it "task :create_symlink must not run anything (no-op)" do
       @config.find_and_execute_task("deploy:create_symlink")
 
