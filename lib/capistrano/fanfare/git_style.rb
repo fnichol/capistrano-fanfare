@@ -8,13 +8,15 @@ module Capistrano::Fanfare::GitStyle
       set :deploy_via,      :git_style
       set(:release_name)    { %{#{Time.now.utc.strftime("%Y%m%d%H%M%S")}-#{real_revision}} }
       set(:release_path)    { current_path }
+      set(:current_release) { current_path }
       set(:latest_release)  { current_path }
 
       set(:current_revision) {
         capture("cd #{current_path} && git rev-parse HEAD",
                 :except => { :no_release => true }).chomp }
       set(:latest_revision) {
-        capture("basename #{current_release} | cut -d - -f 2",
+        last_release_dir = releases.length > 0 ? File.join(releases_path, releases.last) : nil
+        capture("basename #{last_release_dir} | cut -d - -f 2",
                 :except => { :no_release => true }).chomp }
       set(:previous_revision) {
         capture("basename #{previous_release} | cut -d - -f 2",

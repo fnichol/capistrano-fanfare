@@ -36,6 +36,10 @@ describe Capistrano::Fanfare::GitStyle do
       @config.fetch(:release_path).must_equal @config.fetch(:current_path)
     end
 
+    it "sets :current_release to :current_path" do
+      @config.fetch(:current_release).must_equal @config.fetch(:current_path)
+    end
+
     it "sets :latest_release to :current_path" do
       @config.fetch(:latest_release).must_equal @config.fetch(:current_path)
     end
@@ -49,7 +53,8 @@ describe Capistrano::Fanfare::GitStyle do
     end
 
     it "sets :latest_revision to current git revision on the server" do
-      @config.set :current_release, "/a/apps/zurb/releases/20120101020304-gitFAB"
+      @config.set :releases_path, "/a/apps/zurb/releases"
+      @config.set :releases, ["first-one", "20120101020304-gitFAB"]
       capture_cmd = "basename /a/apps/zurb/releases/20120101020304-gitFAB | cut -d - -f 2"
       @config.captures_responses[capture_cmd] = "gitFAB"
 
