@@ -54,7 +54,7 @@ module Capistrano::Fanfare::Bundler
         DESC
         task :create_binstub_script, :roles => :app, :except => { :no_release => true } do
           run "mkdir -p #{shared_path}/bin"
-          put bundle_binstub_template, "#{shared_path}/bin/bundle"
+          put bundle_binstub_template, "#{shared_path}/bin/bundle", { :mode => "0755" }
         end
 
         desc <<-DESC
@@ -63,7 +63,8 @@ module Capistrano::Fanfare::Bundler
         task :cp_bundle_binstub, :roles => :app, :except => { :no_release => true } do
           run [
             "mkdir -p #{current_path}/bin",
-            "cp #{shared_path}/bin/bundle #{current_path}/bin/bundle"
+            "cp #{shared_path}/bin/bundle #{current_path}/bin/bundle",
+            "chmod 0755 #{current_path}/bin/bundle"
           ].join(" && ")
         end
       end

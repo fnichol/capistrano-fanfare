@@ -143,7 +143,8 @@ load Gem.bin_path('bundler', 'bundle')
 
         @config.must_have_run [
           "mkdir -p /tmp/app/current/bin",
-          "cp /tmp/app/shared/bin/bundle /tmp/app/current/bin/bundle"
+          "cp /tmp/app/shared/bin/bundle /tmp/app/current/bin/bundle",
+          "chmod 0755 /tmp/app/current/bin/bundle"
         ].join(" && ")
       end
 
