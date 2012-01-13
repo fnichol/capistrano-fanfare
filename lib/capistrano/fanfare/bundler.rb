@@ -3,8 +3,12 @@ require 'capistrano'
 module Capistrano::Fanfare::Bundler
   def self.load_into(configuration)
     configuration.load do
-      set(:bundle_cmd)      { "#{current_release}/bin/bundle" }
+      set :bundle_cmd,      "bundle"
       set :bundle_shebang,  "ruby-local-exec"
+
+      set(:default_environment) {
+        { 'PATH' => "#{current_path}/bin:$PATH" }
+      }
 
       set(:bundle_flags) do
         flags = "--deployment"
@@ -41,7 +45,7 @@ module Capistrano::Fanfare::Bundler
 
       require 'bundler/capistrano'
 
-      set(:rake)  { "#{current_release}/bin/rake" }
+      set(:rake) { "rake" }
 
       # =========================================================================
       # These are the tasks that are available to help with deploying web apps.

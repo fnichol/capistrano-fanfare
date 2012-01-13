@@ -32,12 +32,18 @@ describe Capistrano::Fanfare::Bundler do
   end
 
   describe "for variables" do
-    it "sets :bundle_cmd to use bin/bundle" do
-      @config.fetch(:bundle_cmd).must_equal "/srv/gemmy/releases/thisone/bin/bundle"
+    it "sets :bundle_cmd to 'bundle'" do
+      @config.fetch(:bundle_cmd).must_equal "bundle"
     end
 
     it "sets :bundle_shebang to 'ruby-local-exec'" do
       @config.fetch(:bundle_shebang).must_equal "ruby-local-exec"
+    end
+
+    it "add :current_path/bin to the default_environment PATH" do
+      @config.set :current_path, "/tmp/app/current"
+
+      @config.fetch(:default_environment)['PATH'].must_equal "/tmp/app/current/bin:$PATH"
     end
 
     it "sets :bundle_binstub_template to the binstub script" do
@@ -59,8 +65,8 @@ load Gem.bin_path('bundler', 'bundle')
       BINSTUB
     end
 
-    it "sets :rake to use bin/rake" do
-      @config.fetch(:rake).must_equal "/srv/gemmy/releases/thisone/bin/rake"
+    it "sets :rake to 'rake'" do
+      @config.fetch(:rake).must_equal "rake"
     end
 
     describe ":bundle_flags" do
