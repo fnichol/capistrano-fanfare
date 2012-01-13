@@ -70,7 +70,7 @@ module Capistrano::Fanfare::Bundler
       end
 
       after "deploy:setup", "bundle:create_binstub_script"
-      after "deploy:update_code", "bundle:cp_bundle_binstub"
+      before "deploy:finalize_update", "bundle:cp_bundle_binstub"
     end
   end
 end

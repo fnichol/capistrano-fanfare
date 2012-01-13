@@ -149,7 +149,7 @@ load Gem.bin_path('bundler', 'bundle')
       end
 
       it "gets called after deploy:update_code task" do
-        @config.must_have_callback_after "deploy:update_code", "bundle:cp_bundle_binstub"
+        @config.must_have_callback_before "deploy:finalize_update", "bundle:cp_bundle_binstub"
       end
     end
   end
