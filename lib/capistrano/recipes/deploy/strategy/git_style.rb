@@ -14,7 +14,7 @@ module Capistrano
         end
 
         def mark
-          "(mkdir -p #{configuration[:release_path]})"
+          "(mkdir -p #{File.join(configuration[:releases_path], configuration[:release_name])})"
         end
       end
     end

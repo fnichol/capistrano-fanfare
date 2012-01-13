@@ -7,7 +7,8 @@ require 'capistrano/recipes/deploy/strategy/git_style'
 describe Capistrano::Deploy::Strategy::GitStyle do
   before do
     @config = Capistrano::Configuration.new
-    @config.set :release_path,  "/u/apps/fooapp/releases/20120101020304-gitABC123"
+    @config.set :releases_path, "/u/apps/fooapp/releases"
+    @config.set :release_name,  "20120101020304-gitABC123"
     @config.set :current_path,  "/u/apps/fooapp/current"
     @config.set :real_revision, "gitABC123"
     @config.set :source,        Capistrano::Deploy::SCM.new(:git, @config)
