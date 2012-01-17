@@ -77,22 +77,6 @@ module Capistrano::Fanfare::GitStyle
           end
         end
 
-        desc <<-DESC
-          Deploys and starts a `cold' application. This is useful if you have not \
-          deployed your application before, or if your application is (for some \
-          other reason) not currently running. It will deploy the code, run any \
-          pending migrations, and then instead of invoking `deploy:restart', it \
-          will invoke `deploy:start' to fire up the application servers.
-
-          [NOTE] This overides the capistrano default by calling the "db:seed" \
-          task, if it is defined.
-        DESC
-        task :cold do
-          update
-          migrate
-          db.seed if respond_to?(:db) && db.respond_to?(:seed)
-          start
-        end
       end
     end
   end

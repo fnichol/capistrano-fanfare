@@ -13,6 +13,8 @@ module Capistrano::Fanfare::Defaults
       set :os_types,    [:darwin, :linux, :sunos]
       set(:os_type)     { capture("uname -s").chomp.downcase.to_sym }
 
+      set :shared_children, %w{public/system log tmp/pids tmp/sockets tmp/sessions}
+
       default_run_options[:pty] = true
 
       ##
@@ -36,6 +38,25 @@ module Capistrano::Fanfare::Defaults
           "production"
         end
       }
+
+      namespace :deploy do
+        desc <<-DESC
+          Deploys and starts a `cold' application. This is useful if you have not \
+          deployed your application before, or if your application is (for some \
+          other reason) not currently running. It will deploy the code, run any \
+          pending migrations, and then instead of invoking `deploy:restart', it \
+          will invoke `deploy:start' to fire up the application servers.
+
+          [NOTE] This overides the capistrano default by calling the "db:seed" \
+          task, if it is defined.
+        DESC
+        task :cold do
+          update
+          migrate
+          db.seed if respond_to?(:db) && db.respond_to?(:seed)
+          start
+        end
+      end
     end
   end
 end

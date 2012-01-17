@@ -137,4 +137,41 @@ describe Capistrano::Fanfare::Defaults do
       @config.fetch(:os_type).must_equal :sunos
     end
   end
+
+  it "sets :shared_children to include tmp/sockets and tmp/sessions" do
+    @config.fetch(:shared_children).
+      must_equal %w{public/system log tmp/pids tmp/sockets tmp/sessions}
+  end
+
+  describe "for :deploy namespace" do
+    describe "task :cold" do
+      before do
+        @config.load do
+          def methods_called ; @methods_called ||= [] ; end
+
+          namespace :deploy do
+            task(:update)   { methods_called << "deploy:update" }
+            task(:migrate)  { methods_called << "deploy:migrate" }
+            task(:start)    { methods_called << "deploy:start" }
+          end
+        end
+      end
+
+      it "calls same tasks as delivered gem code" do
+        @config.find_and_execute_task("deploy:cold")
+
+        @config.methods_called.must_equal(
+          ["deploy:update", "deploy:migrate", "deploy:start"])
+      end
+
+      it "calls db:seed if the task exists" do
+        @config.namespace :db do
+          task(:seed) { methods_called << "db:seed" }
+        end
+        @config.find_and_execute_task("deploy:cold")
+
+        @config.methods_called.must_include "db:seed"
+      end
+    end
+  end
 end

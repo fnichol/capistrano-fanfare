@@ -109,36 +109,6 @@ describe Capistrano::Fanfare::GitStyle do
       @config.wont_have_run_anything
     end
 
-    describe "task :cold" do
-      before do
-        @config.load do
-          def methods_called ; @methods_called ||= [] ; end
-
-          namespace :deploy do
-            task(:update)   { methods_called << "deploy:update" }
-            task(:migrate)  { methods_called << "deploy:migrate" }
-            task(:start)    { methods_called << "deploy:start" }
-          end
-        end
-      end
-
-      it "calls same tasks as delivered gem code" do
-        @config.find_and_execute_task("deploy:cold")
-
-        @config.methods_called.must_equal(
-          ["deploy:update", "deploy:migrate", "deploy:start"])
-      end
-
-      it "calls db:seed if the task exists" do
-        @config.namespace :db do
-          task(:seed) { methods_called << "db:seed" }
-        end
-        @config.find_and_execute_task("deploy:cold")
-
-        @config.methods_called.must_include "db:seed"
-      end
-    end
-
     describe "in namespace :rollback" do
       before do
         @config.load do
