@@ -4,9 +4,9 @@ require File.expand_path('../lib/capistrano/fanfare/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Fletcher Nichol"]
   gem.email         = ["fnichol@nichol.ca"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.description   = %q{Capistrano recipes (with full test suite) for fanfare application deployment framework}
+  gem.summary       = %q{Capistrano recipes (with full test suite) for fanfare application deployment framework}
+  gem.homepage      = "https://github.com/fnichol/capistrano-fanfare"
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")
