@@ -12,7 +12,7 @@ module Capistrano::Fanfare::Bundler
 
       set(:bundle_flags) do
         flags = "--deployment"
-        flags << " --quiet" unless ENV['VERBOSE']
+        flags << " --quiet" if ENV['QUIET']
         flags << " --binstubs"
         flags << " --shebang #{bundle_shebang}"
         flags

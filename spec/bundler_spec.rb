@@ -88,14 +88,14 @@ load Gem.bin_path('bundler', 'bundle')
         @config.fetch(:bundle_flags).must_match /--shebang bangbang/
       end
 
-      it "contains --quiet by default" do
-        @config.fetch(:bundle_flags).must_match /--quiet/
+      it "doesn't contain --quiet by default" do
+        @config.fetch(:bundle_flags).wont_match /--quiet/
       end
 
-      it "does not contain --quiet if ENV['VERSBOSE'] is set" do
-        ENV['VERBOSE'] = "yes"
+      it "contains --quiet if ENV['QUIET'] is set" do
+        ENV['QUIET'] = "yes"
 
-        @config.fetch(:bundle_flags).wont_match /--quiet/
+        @config.fetch(:bundle_flags).must_match /--quiet/
       end
     end
 
