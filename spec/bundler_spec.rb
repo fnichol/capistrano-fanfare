@@ -71,7 +71,7 @@ load Gem.bin_path('bundler', 'bundle')
 
     describe ":bundle_flags" do
       after do
-        ENV.delete('VERBOSE')
+        ENV.delete('QUIET')
       end
 
       it "contains --deployment" do
