@@ -71,8 +71,8 @@ describe Capistrano::Fanfare::Foreman do
         @config.must_have_run "cp /tmp/app/shared/env /tmp/app/releases/blah/.env"
       end
 
-      it "gets called after deploy:updated_code task" do
-        @config.must_have_callback_after "deploy:update_code", "foreman:cp_env"
+      it "gets called after deploy:finalize_update task" do
+        @config.must_have_callback_after "deploy:finalize_update", "foreman:cp_env"
       end
     end
 

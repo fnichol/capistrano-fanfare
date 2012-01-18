@@ -145,7 +145,7 @@ module Capistrano::Fanfare::Foreman
         foreman.run_cmd
       end
 
-      after "deploy:update_code", "foreman:cp_env"
+      after "deploy:finalize_update", "foreman:cp_env"
       after "deploy:start", "foreman:start"
       after "deploy:stop", "foreman:stop"
       after "deploy:restart", "foreman:restart"
