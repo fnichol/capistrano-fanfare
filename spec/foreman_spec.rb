@@ -129,6 +129,10 @@ describe Capistrano::Fanfare::Foreman do
 
         strategy.verify
       end
+
+      it "calls foreman:start task after deploy:start" do
+        @config.must_have_callback_after "deploy:start", "foreman:start"
+      end
     end
 
     describe "task :stop" do
@@ -138,6 +142,10 @@ describe Capistrano::Fanfare::Foreman do
 
         strategy.verify
       end
+
+      it "calls foreman:stop task after deploy:stop" do
+        @config.must_have_callback_after "deploy:stop", "foreman:stop"
+      end
     end
 
     describe "task :restart" do
@@ -146,6 +154,10 @@ describe Capistrano::Fanfare::Foreman do
         @config.find_and_execute_task("foreman:restart")
 
         strategy.verify
+      end
+
+      it "calls foreman:restart task after deploy:restart" do
+        @config.must_have_callback_after "deploy:restart", "foreman:restart"
       end
     end
 
