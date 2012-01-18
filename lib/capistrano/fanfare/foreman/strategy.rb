@@ -2,6 +2,11 @@ module Capistrano
   module Fanfare
     module Foreman
       module Strategy
+
+        ##
+        # Returns a new instance of the +strategy+ Foreman export strategy,
+        # which has been injected with the Capistrano::Configuration instance.
+
         def self.new(strategy, config={})
           strategy_file = "capistrano/fanfare/foreman/strategy/#{strategy}"
           require(strategy_file)

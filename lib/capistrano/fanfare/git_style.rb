@@ -22,6 +22,11 @@ module Capistrano::Fanfare::GitStyle
         capture("basename #{previous_release} | cut -d - -f 2",
                 :except => { :no_release => true }).chomp if previous_release }
 
+      # =========================================================================
+      # These are the tasks that are available to help with deploying web apps.
+      # You can have cap give you a summary of them with `cap -T'.
+      # =========================================================================
+
       namespace :deploy do
         desc <<-DESC
           Copies your project to the remote servers. This is the first stage \

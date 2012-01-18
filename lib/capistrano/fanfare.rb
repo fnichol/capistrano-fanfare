@@ -17,6 +17,7 @@ end
 
 module Capistrano
   class Configuration
+    # injects a fanfare_recipe helper method which can be used in the Capfile
     include Capistrano::Fanfare::Configuration
   end
 end

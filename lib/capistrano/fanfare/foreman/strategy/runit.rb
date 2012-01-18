@@ -4,6 +4,10 @@ module Capistrano
   module Fanfare
     module Foreman
       module Strategy
+
+        ##
+        # Implements the runit Foreman export strategy.
+
         class Runit < Base
           def export
             run [

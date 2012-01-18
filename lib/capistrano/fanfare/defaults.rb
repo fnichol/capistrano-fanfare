@@ -39,6 +39,11 @@ module Capistrano::Fanfare::Defaults
         end
       }
 
+      # =========================================================================
+      # These are the tasks that are available to help with deploying web apps.
+      # You can have cap give you a summary of them with `cap -T'.
+      # =========================================================================
+
       namespace :deploy do
         desc <<-DESC
           Deploys and starts a `cold' application. This is useful if you have not \
