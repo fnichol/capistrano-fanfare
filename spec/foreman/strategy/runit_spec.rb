@@ -26,9 +26,7 @@ describe Capistrano::Fanfare::Foreman::Strategy::Runit do
       "mkdir -p /srv/fooapp/shared/sv &&",
       "bin/foreman export runit /srv/fooapp/shared/sv",
       "--app=fooapp_production --log=/srv/fooapp/shared/log",
-      "--user=deploy &&",
-      "find /srv/fooapp/shared/sv -type f -name run",
-      "-exec chmod 755 {} \\; ; else",
+      "--user=deploy ; else",
       "echo '>>>> A Procfile must exist in this project.' && exit 10 ; fi"
     ].join(' ')
   end

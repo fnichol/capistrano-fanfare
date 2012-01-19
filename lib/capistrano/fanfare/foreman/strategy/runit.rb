@@ -18,9 +18,7 @@ module Capistrano
               "#{configuration[:runit_sv_path]}",
               "--app=#{configuration[:runit_app_name]}",
               "--log=#{configuration[:shared_path]}/log",
-              "--user=#{configuration[:user]} &&",
-              "find #{configuration[:runit_sv_path]} -type f -name run",
-              "-exec chmod 755 {} \\; ; else",
+              "--user=#{configuration[:user]} ; else",
               "echo '>>>> A Procfile must exist in this project.' && exit 10 ;",
               "fi"
             ].join(' ')
