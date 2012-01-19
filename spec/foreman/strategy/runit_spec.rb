@@ -21,13 +21,31 @@ describe Capistrano::Fanfare::Foreman::Strategy::Runit do
     strategy.export
 
     @config.must_have_run [
+      "set -x &&",
       "cd /srv/fooapp/releases/thisone &&",
       "if [ -f Procfile ] ; then",
-      "mkdir -p /srv/fooapp/shared/sv &&",
-      "bin/foreman export runit /srv/fooapp/shared/sv",
-      "--app=fooapp_production --log=/srv/fooapp/shared/log",
-      "--user=deploy ; else",
-      "echo '>>>> A Procfile must exist in this project.' && exit 10 ; fi"
+        "rm -rf /srv/fooapp/shared/sv-pre &&",
+        "mkdir -p /srv/fooapp/shared/sv-pre &&",
+        "bin/foreman export runit /srv/fooapp/shared/sv-pre",
+          "--app=fooapp_production --log=/srv/fooapp/shared/log",
+          "--user=deploy &&",
+        "set +x &&",
+        "egrep -lr /srv/fooapp/shared/sv-pre /srv/fooapp/shared/sv-pre | (xargs",
+        "sed -i 's|/srv/fooapp/shared/sv-pre|/srv/fooapp/shared/sv|g' || true) &&",
+        "(cd /srv/fooapp/shared/sv ; find . -path '*/supervise' -type d -prune -o -type f | grep -v 'supervise$' | sort | xargs openssl sha) > /tmp/sv-dir-$$ &&",
+        "(cd /srv/fooapp/shared/sv-pre ; find . -path '*/supervise' -type d -prune -o -type f | grep -v 'supervise$' | sort | xargs openssl sha) > /tmp/sv-pre-dir-$$ &&",
+        "set -x &&",
+        "if diff -q /tmp/sv-dir-$$ /tmp/sv-pre-dir-$$ >/dev/null ; then",
+          "echo '\\n---> Foreman export atrifacts are identical\\n' &&",
+          "rm -rf /srv/fooapp/shared/sv-pre",
+        "; else",
+            "echo '\\n---> Installing updated Foreman export artifacts\\n' &&",
+            "rm -rf /srv/fooapp/shared/sv && mv /srv/fooapp/shared/sv-pre /srv/fooapp/shared/sv",
+        "; fi &&",
+        "rm -f /tmp/sv-{dir,pre-dir}-$$",
+      "; else",
+        "echo '>>>> A Procfile must exist in this project.' && exit 10",
+      "; fi"
     ].join(' ')
   end
 
