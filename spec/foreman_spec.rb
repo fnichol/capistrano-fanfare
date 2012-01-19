@@ -26,6 +26,10 @@ describe Capistrano::Fanfare::Foreman do
       @config.fetch(:foreman_cmd).must_equal "foreman"
     end
 
+    it "sets :rake to 'foreman run rake'" do
+      @config.fetch(:rake).must_equal "foreman run rake"
+    end
+
     it "sets :foreman_export_via to :runit" do
       @config.fetch(:foreman_export_via).must_equal :runit
     end

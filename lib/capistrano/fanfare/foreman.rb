@@ -16,6 +16,7 @@ module Capistrano::Fanfare::Foreman
       set(:user_home)           { capture("echo $HOME").chomp }
 
       set :foreman_cmd,         "foreman"
+      set :rake,                "foreman run rake"
       set :foreman_export_via,  :runit
 
       set(:foreman_strategy) do
