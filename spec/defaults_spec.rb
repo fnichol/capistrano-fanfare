@@ -23,10 +23,6 @@ describe Capistrano::Fanfare::Defaults do
     @config.fetch(:user).must_equal "deploy"
   end
 
-  it "sets :rake to 'bundle exec rake'" do
-    @config.fetch(:rake).must_equal "bundle exec rake"
-  end
-
   it "sets :ssh_options to include :forward_agent => true" do
     @config.fetch(:ssh_options)[:forward_agent].must_equal true
   end
