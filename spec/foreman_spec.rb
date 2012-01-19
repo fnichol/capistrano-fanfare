@@ -111,6 +111,10 @@ describe Capistrano::Fanfare::Foreman do
 
         strategy.verify
       end
+
+      it "gets called after deploy:update_code task" do
+        @config.must_have_callback_after "deploy:update_code", "foreman:export"
+      end
     end
 
     describe "task :register" do
@@ -119,6 +123,14 @@ describe Capistrano::Fanfare::Foreman do
         @config.find_and_execute_task("foreman:register")
 
         strategy.verify
+      end
+
+      it "gets called before deploy:start task" do
+        @config.must_have_callback_before "deploy:start", "foreman:register"
+      end
+
+      it "gets called before deploy:restart task" do
+        @config.must_have_callback_before "deploy:restart", "foreman:register"
       end
     end
 
