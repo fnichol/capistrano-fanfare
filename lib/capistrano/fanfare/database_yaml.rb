@@ -24,3 +24,7 @@ module Capistrano::Fanfare::DatabaseYaml
     end
   end
 end
+
+if Capistrano::Configuration.instance
+  Capistrano::Fanfare::DatabaseYaml.load_into(Capistrano::Configuration.instance)
+end
