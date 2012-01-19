@@ -17,31 +17,38 @@ describe Capistrano::Fanfare::Foreman::Strategy::Runit do
     @config.set :shared_path, "/srv/fooapp/shared"
     @config.set :runit_sv_path, "/srv/fooapp/shared/sv"
     @config.set :runit_app_name, "fooapp_production"
+    @config.set :runit_service_path, "/home/foouser/service"
     @config.set :user, "deploy"
     strategy.export
 
     @config.must_have_run [
       "set -x &&",
+      "svp=/srv/fooapp/shared/sv &&",
       "cd /srv/fooapp/releases/thisone &&",
       "if [ -f Procfile ] ; then",
-        "rm -rf /srv/fooapp/shared/sv-pre &&",
-        "mkdir -p /srv/fooapp/shared/sv-pre &&",
-        "bin/foreman export runit /srv/fooapp/shared/sv-pre",
+        "rm -rf ${svp}-pre &&",
+        "mkdir -p ${svp}-pre &&",
+        "bin/foreman export runit ${svp}-pre",
           "--app=fooapp_production --log=/srv/fooapp/shared/log",
           "--user=deploy &&",
         "set +x &&",
-        "egrep -lr /srv/fooapp/shared/sv-pre /srv/fooapp/shared/sv-pre | (xargs",
-        "sed -i 's|/srv/fooapp/shared/sv-pre|/srv/fooapp/shared/sv|g' || true) &&",
-        "(cd /srv/fooapp/shared/sv ; find . -path '*/supervise' -type d -prune -o -type f | grep -v 'supervise$' | sort | xargs openssl sha) > /tmp/sv-dir-$$ &&",
-        "(cd /srv/fooapp/shared/sv-pre ; find . -path '*/supervise' -type d -prune -o -type f | grep -v 'supervise$' | sort | xargs openssl sha) > /tmp/sv-pre-dir-$$ &&",
+        "egrep -lr ${svp}-pre ${svp}-pre | (xargs",
+        "sed -i \"s|${svp}-pre|${svp}|g\" || true) &&",
+        "(cd ${svp} ; find . -path '*/supervise' -type d -prune -o -type f | grep -v 'supervise$' | sort | xargs openssl sha) > /tmp/sv-dir-$$ &&",
+        "(cd ${svp}-pre ; find . -path '*/supervise' -type d -prune -o -type f | grep -v 'supervise$' | sort | xargs openssl sha) > /tmp/sv-pre-dir-$$ &&",
         "set -x &&",
         "if diff -q /tmp/sv-dir-$$ /tmp/sv-pre-dir-$$ >/dev/null ; then",
-          "echo '\\n---> Foreman export atrifacts are identical\\n' &&",
-          "rm -rf /srv/fooapp/shared/sv-pre",
+          "echo '\\n===> Foreman export atrifacts are identical\\n' &&",
+          "rm -rf ${svp}-pre",
         "; else",
-            "echo '\\n---> Installing updated Foreman export artifacts\\n' &&",
-            "rm -rf /srv/fooapp/shared/sv && mv /srv/fooapp/shared/sv-pre /srv/fooapp/shared/sv",
+            "echo '\\n===> Updated Foreman export artifacts detected\\n' &&",
+            "echo '---> Stoping processes' &&",
+            "rm -f /home/foouser/service/fooapp_production-* &&",
+            "echo '---> Installing updated Foreman export artifacts' &&",
+            "rm -rf ${svp} && mv ${svp}-pre ${svp} &&",
+            "touch ${svp}/.symlink_boot",
         "; fi &&",
+        "echo '---> Cleaning up' &&",
         "rm -f /tmp/sv-{dir,pre-dir}-$$",
       "; else",
         "echo '>>>> A Procfile must exist in this project.' && exit 10",
@@ -49,12 +56,58 @@ describe Capistrano::Fanfare::Foreman::Strategy::Runit do
     ].join(' ')
   end
 
-  it "#register symlinks services in :runit_sv_path to :runit_service_path" do
-    @config.set :runit_sv_path, "/apps/foo/shared/sv"
-    @config.set :runit_service_path, "/home/foouser/service"
-    strategy.register
+  describe "#register" do
+    it "symlinks services in :runit_sv_path to :runit_service_path" do
+      @config.set :runit_sv_path, "/apps/foo/shared/sv"
+      @config.set :runit_service_path, "/home/foouser/service"
+      @config.captures_responses["if [ -f /apps/foo/shared/sv/.symlink_boot ] ; then echo true ; else echo false ; fi"] = "true\n"
+      strategy.register
 
-    @config.must_have_run "ln -snf /apps/foo/shared/sv/* /home/foouser/service/"
+      @config.must_have_run [
+        "ln -snf /apps/foo/shared/sv/* /home/foouser/service/",
+        "rm -f /apps/foo/shared/sv/.symlink_boot"
+      ].join(' && ')
+    end
+
+    describe "with a symlink_boot" do
+      before do
+        @config.set :runit_sv_path, "/apps/foo/shared/sv"
+        @config.set :runit_service_path, "/home/foouser/service"
+        @config.after "deploy:start", "foreman:start"
+        @config.after "deploy:restart", "foreman:restart"
+        @config.captures_responses["if [ -f /apps/foo/shared/sv/.symlink_boot ] ; then echo true ; else echo false ; fi"] = "true\n"
+      end
+
+      it "removes the start callback" do
+        strategy.register
+        @config.wont_have_callback_after "foreman:start", "deploy:start"
+      end
+
+     it "removes the restart callback" do
+        strategy.register
+        @config.wont_have_callback_after "foreman:restart", "deploy:restart"
+      end
+    end
+
+    describe "without a symlink_boot" do
+      before do
+        @config.set :runit_sv_path, "/apps/foo/shared/sv"
+        @config.set :runit_service_path, "/home/foouser/service"
+        @config.after "deploy:start", "foreman:start"
+        @config.after "deploy:restart", "foreman:restart"
+        @config.captures_responses["if [ -f /apps/foo/shared/sv/.symlink_boot ] ; then echo true ; else echo false ; fi"] = "false\n"
+      end
+
+      it "preserves the start callback" do
+        strategy.register
+        @config.must_have_callback_after "deploy:start", "foreman:start"
+      end
+
+     it "preserves the restart callback" do
+        strategy.register
+        @config.must_have_callback_after "deploy:restart", "foreman:restart"
+      end
+    end
   end
 
   describe "#start" do
@@ -63,7 +116,10 @@ describe Capistrano::Fanfare::Foreman::Strategy::Runit do
       @config.set :runit_app_name, "wuzzle_production"
       strategy.start
 
-      @config.must_have_run "sv start /home/foouser/service/wuzzle_production-*"
+      @config.must_have_run [
+        "sv start /home/foouser/service/wuzzle_production-*",
+        "(s=$? && echo \"Start exited with $s\" && exit $s)"
+      ].join(' || ')
     end
   end
 
@@ -73,7 +129,10 @@ describe Capistrano::Fanfare::Foreman::Strategy::Runit do
       @config.set :runit_app_name, "wuzzle_production"
       strategy.stop
 
-      @config.must_have_run "sv stop /home/foouser/service/wuzzle_production-*"
+      @config.must_have_run [
+        "sv stop /home/foouser/service/wuzzle_production-*",
+        "(s=$? && echo \"Stop exited with $s\" && exit $s)"
+      ].join(' || ')
     end
   end
 
@@ -83,7 +142,10 @@ describe Capistrano::Fanfare::Foreman::Strategy::Runit do
       @config.set :runit_app_name, "wuzzle_production"
       strategy.restart
 
-      @config.must_have_run "sv restart /home/foouser/service/wuzzle_production-*"
+      @config.must_have_run [
+        "sv restart /home/foouser/service/wuzzle_production-*",
+        "(s=$? && echo \"Restart exited with $s\" && exit $s)"
+      ].join(' || ')
     end
   end
 
@@ -93,7 +155,10 @@ describe Capistrano::Fanfare::Foreman::Strategy::Runit do
       @config.set :runit_app_name, "wuzzle_production"
       strategy.ps
 
-      @config.must_have_run "sv status /home/foouser/service/wuzzle_production-*"
+      @config.must_have_run [
+        "sv status /home/foouser/service/wuzzle_production-*",
+        "(s=$? && echo \"Status exited with $s\" && exit $s)"
+      ].join(' || ')
     end
   end
 end
