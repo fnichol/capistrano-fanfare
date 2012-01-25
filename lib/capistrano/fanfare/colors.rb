@@ -9,3 +9,7 @@ module Capistrano::Fanfare::Colors
     end
   end
 end
+
+if Capistrano::Configuration.instance
+  Capistrano::Fanfare::Colors.load_into(Capistrano::Configuration.instance)
+end
