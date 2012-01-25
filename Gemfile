@@ -6,6 +6,7 @@ gemspec
 group :test do
   gem 'rake', '~> 0.9'
   gem 'foreman'
+  gem 'capistrano-campfire'
 end
 
 platforms :jruby do
