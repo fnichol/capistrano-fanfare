@@ -69,7 +69,7 @@ module Capistrano
           end
 
           def register
-            symlink_boot = capture([
+            symlink_boot = configuration.capture([
               "if [ -f #{configuration[:runit_sv_path]}/.symlink_boot ] ; then",
                 "echo true",
               "; else",
