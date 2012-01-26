@@ -35,9 +35,9 @@ describe Capistrano::Fanfare::Console do
 
     let(:console_test) do
       [ "if [ -f /app/current/script/console ] ; then echo rails2",
-        "; elif [ -f /app/current/script/console ] ; then echo rails3",
+        "; elif [ -f /app/current/script/rails ] ; then echo rails3",
         "; elif [ -f /app/current/config.ru -a -f /app/current/Gemfile ]",
-          "&& grep /app/current/Gemfile 'gem.*racksh' >/dev/null",
+          "&& grep 'gem.*racksh' /app/current/Gemfile >/dev/null",
           "; then echo racksh",
         "; else echo unknown ; fi"
       ].join(' ')

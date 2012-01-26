@@ -37,9 +37,9 @@ module Capistrano::Fanfare::Console
 
         console_test = [
           "if [ -f #{current_path}/script/console ] ; then echo rails2",
-          "; elif [ -f #{current_path}/script/console ] ; then echo rails3",
+          "; elif [ -f #{current_path}/script/rails ] ; then echo rails3",
           "; elif [ -f #{current_path}/config.ru -a -f #{current_path}/Gemfile ]",
-            "&& grep #{current_path}/Gemfile 'gem.*racksh' >/dev/null",
+            "&& grep 'gem.*racksh' #{current_path}/Gemfile >/dev/null",
             "; then echo racksh",
           "; else echo unknown ; fi"
         ].join(' ')
