@@ -69,6 +69,15 @@ looks like:
     role :db,  deploy_server, :primary => true
     role :db,  deploy_server
 
+There are several optional recipes that need additional gems in your Gemfile:
+
+    gem 'airbrake'
+
+    group :development do
+      gem 'capistrano-fanfare'
+      gem 'capistrano-campfire'
+    end
+
 ## Contributing
 
 1. Fork it
