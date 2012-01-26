@@ -20,7 +20,7 @@ Or install it yourself as:
 
 TODO: Write usage instructions here
 
-* Create a `Capfile` that looks like:
+Create a `Capfile` that looks like:
 
     load 'deploy'
 
@@ -45,9 +45,10 @@ TODO: Write usage instructions here
 
     load 'config/deploy'
 
-* Pick and choose your fanfare recipes in `Capfile`--they are designed to work
-  independently but also build off each other.
-* Create a `config/deploy.rb` that looks like:
+Pick and choose your fanfare recipes in `Capfile`--they are designed to work
+independently but also build off each other.
+
+Create a `config/deploy.rb` that looks like:
 
     set :application, "myappname"
     set :repository,  "git@mygitserver.com:myappname.git"
@@ -57,8 +58,8 @@ TODO: Write usage instructions here
                             :token => '010010010100101',
                             :ssl => true
 
-* Create a `config/deploy/staging.rb` (assuming the *multistage* recipe) that
-  looks like:
+Create a `config/deploy/staging.rb` (assuming the *multistage* recipe) that
+looks like:
 
     deploy_server = "myserver.example.com"
 
