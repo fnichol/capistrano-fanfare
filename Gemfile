@@ -7,6 +7,7 @@ group :test do
   gem 'rake', '~> 0.9'
   gem 'foreman'
   gem 'capistrano-campfire'
+  gem 'airbrake'
 end
 
 platforms :jruby do
