@@ -25,6 +25,8 @@ describe Capistrano::Fanfare::Campfire do
 
     ENV['_SPEC_USER'] = ENV['USER']
     ENV['USER'] = 'filbert'
+    ENV['_SPEC_REASON'] = ENV['REASON']
+    ENV['REASON'] = "to deal with the tribbles"
 
     @config.load do
       def puts(msg)
@@ -42,6 +44,7 @@ describe Capistrano::Fanfare::Campfire do
 
   after do
     ENV['USER'] = ENV.delete('_SPEC_USER')
+    ENV['REASON'] = ENV.delete('_SPEC_REASON')
   end
 
   describe "for variables" do
@@ -62,6 +65,23 @@ describe Capistrano::Fanfare::Campfire do
     it "sets :campfire_fail_msg to a known default" do
       @config.fetch(:campfire_fail_msg).must_equal(
         "Deployment started by filbert failed, so attempting to roll back.")
+    end
+
+    it "sets :campfire_web_disable_msg to a known default containing the reason given" do
+      @config.set :application, 'wazup'
+      @config.set :deploy_env, 'staging'
+
+      @config.fetch(:campfire_web_disable_msg).must_equal([
+        'filbert is bringing wazup_staging down into maintenance mode',
+        '("to deal with the tribbles").'].join(' '))
+    end
+
+    it "sets :campfire_web_enable to a known default" do
+      @config.set :application, 'wazup'
+      @config.set :deploy_env, 'staging'
+
+      @config.fetch(:campfire_web_enable_msg).must_equal(
+        "filbert is bringing wazup_staging back from maintenance mode.")
     end
 
     it "sets :campfire_success_play to 'pushit'" do
@@ -186,6 +206,32 @@ describe Capistrano::Fanfare::Campfire do
 
       it "gets called before deploy:rollback task" do
         @config.must_have_callback_before "deploy:rollback", "campfire:rollback_deploy"
+      end
+    end
+
+    describe "task :web_disable" do
+      it "prints a message in campfire" do
+        @config.set :campfire_web_disable_msg, "website offline"
+        @config.find_and_execute_task("campfire:web_disable")
+
+        @config.campfire_room.speaks.first.must_equal "website offline"
+      end
+
+      it "gets called before deploy task" do
+        @config.must_have_callback_before "deploy:web:disable", "campfire:web_disable"
+      end
+    end
+
+    describe "task :web_enable" do
+      it "prints a message in campfire" do
+        @config.set :campfire_web_enable_msg, "we're back baby"
+        @config.find_and_execute_task("campfire:web_enable")
+
+        @config.campfire_room.speaks.first.must_equal "we're back baby"
+      end
+
+      it "gets called before deploy task" do
+        @config.must_have_callback_before "deploy:web:enable", "campfire:web_enable"
       end
     end
   end

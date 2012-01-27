@@ -30,6 +30,19 @@ module Capistrano::Fanfare::Campfire
         "Deployment started by #{ENV['USER']} failed, so attempting to roll back."
       end
 
+      set(:campfire_web_disable_msg) do
+        reason = ENV['REASON'] ? %{"#{ENV['REASON']}"} : "No reason given"
+        msg = [
+          "#{ENV['USER']} is bringing #{application}_#{deploy_env}",
+          "down into maintenance mode (#{reason})."
+        ]
+        msg.join(' ')
+      end
+
+      set(:campfire_web_enable_msg) do
+        "#{ENV['USER']} is bringing #{application}_#{deploy_env} back from maintenance mode."
+      end
+
       set :campfire_success_play, "pushit"
       set :campfire_fail_play,    "trombone"
 
@@ -96,12 +109,28 @@ module Capistrano::Fanfare::Campfire
           speak fetch(:campfire_fail_msg)
           play fetch(:campfire_fail_play)
         end
+
+        desc <<-DESC
+          [internal] Posts a message in Campfire when the app is being brought down.
+        DESC
+        task :web_disable do
+          speak fetch(:campfire_web_disable_msg)
+        end
+
+        desc <<-DESC
+          [internal] Posts a message in Campfire when the app is being brought up.
+        DESC
+        task :web_enable do
+          speak fetch(:campfire_web_enable_msg)
+        end
       end
 
       unless ENV['QUIET'].to_i > 0
         before  "deploy", "campfire:pre_deploy"
         after   "deploy", "campfire:successful_deploy"
         after   "deploy:migrations", "campfire:successful_deploy"
+        before  "deploy:web:disable", "campfire:web_disable"
+        before  "deploy:web:enable", "campfire:web_enable"
       end
 
       before 'deploy:rollback', 'campfire:rollback_deploy'
