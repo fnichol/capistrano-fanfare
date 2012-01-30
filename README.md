@@ -36,6 +36,7 @@ Create a `Capfile` that looks like:
     fanfare_recipe 'foreman'
     fanfare_recipe 'database_yaml'
 
+    fanfare_recipe 'info'
     fanfare_recipe 'colors'
     fanfare_recipe 'ssh'
     fanfare_recipe 'console'
