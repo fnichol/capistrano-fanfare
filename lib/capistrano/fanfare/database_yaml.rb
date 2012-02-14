@@ -20,7 +20,7 @@ module Capistrano::Fanfare::DatabaseYaml
         end
       end
 
-      after "deploy:update_code", "db:cp_database_yml"
+      after "deploy:finalize_update", "db:cp_database_yml"
     end
   end
 end

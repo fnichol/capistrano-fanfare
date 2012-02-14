@@ -25,7 +25,7 @@ describe Capistrano::Fanfare::DatabaseYaml do
       end
 
       it "gets called after deploy:update_code task" do
-        @config.must_have_callback_after "deploy:update_code", "db:cp_database_yml"
+        @config.must_have_callback_after "deploy:finalize_update", "db:cp_database_yml"
       end
     end
   end
