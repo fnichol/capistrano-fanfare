@@ -13,3 +13,7 @@ module Capistrano::Fanfare::Airbrake
     end
   end
 end
+
+if Capistrano::Configuration.instance
+  Capistrano::Fanfare::Airbrake.load_into(Capistrano::Configuration.instance)
+end
