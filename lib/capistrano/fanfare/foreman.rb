@@ -48,6 +48,7 @@ module Capistrano::Fanfare::Foreman
           raise "Please specify a command to execute via the COMMAND " +
             "environment variable" if command.empty?
 
+          logger.info "Running command `#{command}'"
           run "cd #{current_path} && #{foreman_cmd} run '#{command}'"
         end
 
