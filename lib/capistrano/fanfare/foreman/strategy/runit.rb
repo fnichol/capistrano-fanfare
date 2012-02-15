@@ -13,7 +13,6 @@ module Capistrano
             svp = configuration[:runit_sv_path]
 
             run [
-              "set -x &&",
               "svp=#{svp} &&",
               "cd #{configuration[:current_release]} &&",
               "if [ -f Procfile ] ; then",
@@ -26,13 +25,12 @@ module Capistrano
                   "${svp}-pre",
                   "--app=#{configuration[:runit_app_name]}",
                   "--log=#{configuration[:shared_path]}/log",
-                  "--user=#{configuration[:user]} &&",
+                  "--user=#{configuration[:user]} >/dev/null &&",
 
                 # fix any path references in files back to :runit_sv_path
                 # and ensure that a non-zero sed exit doesn't propagate
-                "set +x &&",
                 "egrep -lr ${svp}-pre ${svp}-pre | (xargs",
-                  "sed -i \"s|${svp}-pre|${svp}|g\" || true) &&",
+                  "sed -i \"s|${svp}-pre|${svp}|g\" 2>/dev/null || true) &&",
 
                 # calculate checksums of all service files in both
                 # service directories
@@ -42,23 +40,22 @@ module Capistrano
                 "(cd ${svp}-pre ; find . -path '*/supervise' -type d",
                   "-prune -o -type f | grep -v 'supervise$' | sort |",
                   "xargs openssl sha) > /tmp/sv-pre-dir-$$ &&",
-                "set -x &&",
 
                 "if diff -q /tmp/sv-dir-$$ /tmp/sv-pre-dir-$$ >/dev/null ; then",
-                  "echo '\\n===> Foreman export atrifacts are identical\\n' &&",
+                  "echo '-----> Foreman export atrifacts are identical' &&",
                   "rm -rf ${svp}-pre",
 
                 "; else", # diff -q
-                  "echo '\\n===> Updated Foreman export artifacts detected\\n' &&",
-                  "echo '---> Stoping processes' &&",
+                  "echo '-----> Updated Foreman export artifacts detected' &&",
+                  "echo '-----> Stoping processes' &&",
                   "rm -f #{all_services} &&",
-                  "echo '---> Installing updated Foreman export artifacts' &&",
+                  "echo '-----> Installing updated Foreman export artifacts' &&",
                   "rm -rf ${svp} && mv ${svp}-pre ${svp} &&",
                   "touch ${svp}/.symlink_boot",
                 "; fi &&", # diff -q
 
                 # clean checksum calculations
-                "echo '---> Cleaning up' &&",
+                "echo '-----> Cleaning up' &&",
                 "rm -f /tmp/sv-{dir,pre-dir}-$$",
 
               "; else", # -f Procfile
