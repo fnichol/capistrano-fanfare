@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Capistrano::Fanfare::VERSION
 
-  gem.add_dependency "capistrano", "2.10.0.pre"
+  gem.add_dependency "capistrano", "~> 2.11.1"
   gem.add_dependency "capistrano_colors", "~> 0.5"
   gem.add_dependency "sushi", "~> 0.0.2"
 

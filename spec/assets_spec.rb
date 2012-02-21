@@ -3,19 +3,6 @@ require 'minitest/capistrano'
 require 'capistrano/fanfare'
 require 'capistrano/fanfare/assets'
 
-#
-# Rake mixes in FileUtils methods into Capistrano::Configuration::Namespace as
-# private methods which will cause a method/task namespace collision when the
-# `deploy:assets:symlink' task is created.
-#
-# So, if we are in a Rake context, nuke :symlink in the Namespace class--we
-# won't be using it directly in this codebase but this feels so very, very
-# wrong (here be dragons).
-#
-if defined?(Rake::DSL)
-  Capistrano::Configuration::Namespaces::Namespace.class_eval { undef :symlink }
-end
-
 describe Capistrano::Fanfare::Assets do
   before do
     @config = Capistrano::Configuration.new
