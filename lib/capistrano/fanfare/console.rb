@@ -30,7 +30,7 @@ module Capistrano::Fanfare::Console
       desc <<-DESC
         Runs a rails/rack console on the first application server.
       DESC
-      task :console, :roles => :app, :except => {:no_symlink => true} do
+      task :console, :roles => :app, :only => { :primary => true } do
         rack_env = fetch(:rails_env, nil) || fetch(:rack_env, nil) || "production"
         env_cmd = fetch(:console_env_cmd, "")
         input = ''
