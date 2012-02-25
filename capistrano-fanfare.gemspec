@@ -19,7 +19,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "capistrano_colors", "~> 0.5"
   gem.add_dependency "sushi", "~> 0.0.2"
 
-  gem.add_development_dependency "minitest", "~> 2.10.0"
+  gem.add_development_dependency "minitest", "~> 2.11.2"
   gem.add_development_dependency "minitest-capistrano", "~> 0.0"
   gem.add_development_dependency "timecop", "~> 0.3"
 end
