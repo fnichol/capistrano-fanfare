@@ -1,4 +1,4 @@
-# Capistrano::Fanfare [![Build Status](https://secure.travis-ci.org/fnichol/capistrano-fanfare.png)](http://travis-ci.org/fnichol/capistrano-fanfare)
+# Capistrano::Fanfare [![Build Status](https://secure.travis-ci.org/fnichol/capistrano-fanfare.png)](http://travis-ci.org/fnichol/capistrano-fanfare) [![Dependency Status](https://gemnasium.com/fnichol/capistrano-fanfare.png)](https://gemnasium.com/fnichol/capistrano-fanfare)
 
 TODO: Write a gem description
 
