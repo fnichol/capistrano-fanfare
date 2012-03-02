@@ -1,8 +1,12 @@
-# Capistrano::Fanfare [![Build Status](https://secure.travis-ci.org/fnichol/capistrano-fanfare.png)](http://travis-ci.org/fnichol/capistrano-fanfare) [![Dependency Status](https://gemnasium.com/fnichol/capistrano-fanfare.png)](https://gemnasium.com/fnichol/capistrano-fanfare)
+# <a name="title"></a> Capistrano::Fanfare [![Build Status](https://secure.travis-ci.org/fnichol/capistrano-fanfare.png)](http://travis-ci.org/fnichol/capistrano-fanfare) [![Dependency Status](https://gemnasium.com/fnichol/capistrano-fanfare.png)](https://gemnasium.com/fnichol/capistrano-fanfare)
 
-TODO: Write a gem description
+**Notice:** This README is under active development.
 
-## Installation
+## <a name="features"></a> Features
+
+Coming soon...
+
+## <a name="installation"></a> Installation
 
 Add this line to your application's Gemfile:
 
@@ -12,13 +16,7 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install capistrano-fanfare
-
-## Usage
-
-TODO: Write usage instructions here
+## <a name="usage"></a> Usage
 
 Create a `Capfile` that looks like:
 
@@ -43,7 +41,7 @@ Create a `Capfile` that looks like:
     fanfare_recipe 'campfire'
     fanfare_recipe 'airbrake'
 
-    Dir['vendor/gems/*/recipes/*.rb','vendor/plugins/*/recipes/*.rb'].each { |plugin| load(plugin) }
+    Dir['vendor/plugins/*/recipes/*.rb'].each { |plugin| load(plugin) }
 
     load 'config/deploy'
 
@@ -79,10 +77,164 @@ There are several optional recipes that need additional gems in your Gemfile:
       gem 'capistrano-campfire'
     end
 
-## Contributing
+## <a name="recipes"></a> Recipes
 
-1. Fork it
+**Foundational**
+
+* [git_style](#recipes-git-style):
+  GitHub-style deployments, fully compatible with third party recipes.
+* [foreman](#recipes-foreman):
+  Forget Unicorns, Resque workers, and God. Think processes.
+* [bundler](#recipes-bundler):
+  Binstub `PATH`-aware deployments with custom shebangs and more.
+
+**Core**
+
+* [defaults](#recipes-defatuls):
+  Common baseline defaults and an augmented `deploy:cold`.
+* [multistage](#recipes-multistage):
+  Deploy to multiple environments like `"staging"` and `"production"`.
+* [assets](#recipes-assets):
+  Rails asset pipeline support: done!
+* [database_yaml](#recipes-database-yaml):
+  No more database password baked in your code, leave that up to the server.
+* [db_seed](#recipes-db-seed):
+  Seeding your Rails database, autowired into `deploy:cold`.
+
+**Gravy**
+
+* [ssh](#recipes-ssh):
+  Connect to your infrastructure nodes without thinking.
+* [console](#recipes-console):
+  Rails 2/3, Sinatra, and Rack consoles, running in one command.
+* [colors](#recipes-colors):
+  Deploys, but prettier.
+* [campfire](#recipes-campfire):
+  Notify your team of deployment and maintenace events.
+* [airbrake](#recipes-airbrake):
+  Track your deployments in Airbrake/Hoptoad/Errbit
+* [info](#recipes-info):
+  Deployment configuration information, available at a glance.
+
+### <a name="recipes-foundational"> Foundational
+
+#### <a name="recipes-git-style"> git_style
+
+> GitHub-style deployments, fully compatible with third party recipes.
+
+A Git style deployment strategy based on GitHub's
+[Deployment Script Spring Cleaning][github_spring] blog post.
+
+#### <a name="recipes-foreman"> foreman
+
+> Forget Unicorns, Resque workers, and God. Think processes.
+
+#### <a name="recipes-bundler"> bundler
+
+> Binstub `PATH`-aware deployments with custom shebangs and more.
+
+Uses the delivered [Bundler][cap_bundler] implementation with support for
+shebangs, binstubs `PATH` inclusion, and a generated `bin/bundle` binstub
+script file.
+
+### <a name="recipes-core"> Core
+
+#### <a name="recipes-defaults"> defaults
+
+> Common baseline defaults and an augmented `deploy:cold`.
+
+#### <a name="recipes-multistage"> multistage
+
+> Deploy to multiple environments like `"staging"` and `"production"`.
+
+Uses the delivered [Capistrano multistage][cap_multistage] implementation with
+a few additional helpers.
+
+#### <a name="recipes-asssets"> assets
+
+> Rails asset pipeline support: done!
+
+#### <a name="recipes-db-seed"> db_seed
+
+> Tracking deployments in Airbrake
+
+#### <a name="recipes-database-yaml"> database_yaml
+
+> No more database password baked in your code, leave that up to the server.
+
+### <a name="recipes-gravy"> Gravy
+
+#### <a name="recipes-ssh"> ssh
+
+> Connect to your infrastructure nodes without thinking.
+
+#### <a name="recipes-console"> console
+
+> Rails 2/3, Sinatra, and Rack consoles, running in one command.
+
+#### <a name="recipes-colors"> colors
+
+> Deploys, but prettier.
+
+> Rails console, ready for input in one command.
+
+#### <a name="recipes-campfire"> campfire
+
+> Notify your team of deployment and maintenace events.
+
+#### <a name="recipes-airbrake"> airbrake
+
+> Track your deployments in Airbrake/Hoptoad/Errbit
+
+#### <a name="recipes-info"> info
+
+> Deployment configuration, available at a glance.
+
+## <a name="development"></a> Development
+
+* Source hosted at [GitHub][repo]
+* Report issues/questions/feature requests on [GitHub Issues][issues]
+
+Pull requests are very welcome! Make sure your patches are well tested.
+Ideally create a topic branch for every separate change you make. For
+example:
+
+1. Fork the repo
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Added some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## <a name="authors"></a> Authors
+
+Created and maintained by [Fletcher Nichol][fnichol] (<fnichol@nichol.ca>)
+
+## <a name="license"></a> License
+
+MIT (see [LICENSE][license])
+
+[defaults_src]:       https://github.com/fnichol/capistrano-fanfare/blob/master/lib/capistrano/fanfare/defaults.rb
+[multistage_src]:     https://github.com/fnichol/capistrano-fanfare/blob/master/lib/capistrano/fanfare/multistage.rb
+[git_style_src]:      https://github.com/fnichol/capistrano-fanfare/blob/master/lib/capistrano/fanfare/git_style.rb
+[bundler_src]:        https://github.com/fnichol/capistrano-fanfare/blob/master/lib/capistrano/fanfare/bundler.rb
+[assets_src]:         https://github.com/fnichol/capistrano-fanfare/blob/master/lib/capistrano/fanfare/assets.rb
+[db_seed_src]:        https://github.com/fnichol/capistrano-fanfare/blob/master/lib/capistrano/fanfare/db_seed.rb
+[foreman_src]:        https://github.com/fnichol/capistrano-fanfare/blob/master/lib/capistrano/fanfare/foreman.rb
+[database_yaml_src]:  https://github.com/fnichol/capistrano-fanfare/blob/master/lib/capistrano/fanfare/database_yaml.rb
+[info_src]:           https://github.com/fnichol/capistrano-fanfare/blob/master/lib/capistrano/fanfare/info.rb
+[colors_src]:         https://github.com/fnichol/capistrano-fanfare/blob/master/lib/capistrano/fanfare/colors.rb
+[ssh_src]:            https://github.com/fnichol/capistrano-fanfare/blob/master/lib/capistrano/fanfare/ssh.rb
+[console_src]:        https://github.com/fnichol/capistrano-fanfare/blob/master/lib/capistrano/fanfare/console.rb
+[campfire_src]:       https://github.com/fnichol/capistrano-fanfare/blob/master/lib/capistrano/fanfare/campfire.rb
+[airbrake_src]:       https://github.com/fnichol/capistrano-fanfare/blob/master/lib/capistrano/fanfare/airbrake.rb
+
+[cap_assets]:     https://github.com/capistrano/capistrano/blob/master/lib/capistrano/recipes/deploy/assets.rb
+[cap_bundler]:    https://github.com/carlhuda/bundler/blob/master/lib/bundler/capistrano.rb
+[cap_multistage]: https://github.com/capistrano/capistrano/blob/master/lib/capistrano/ext/multistage.rb
+[github_spring]:  https://github.com/blog/470-deployment-script-spring-cleaning
+[license]:        https://github.com/fnichol/capistrano-fanfare/blob/master/LICENSE
+
+[fnichol]:      https://github.com/fnichol
+[repo]:         https://github.com/fnichol/capistrano-fanfare
+[issues]:       https://github.com/fnichol/capistrano-fanfare/issues
+[contributors]: https://github.com/fnichol/capistrano-fanfare/contributors
