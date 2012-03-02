@@ -52,10 +52,6 @@ load Gem.bin_path('bundler', 'bundle')
       BINSTUB
     end
 
-    it "sets :rake to 'rake'" do
-      @config.fetch(:rake).must_equal "rake"
-    end
-
     describe ":bundle_flags" do
       after do
         ENV.delete('QUIET')

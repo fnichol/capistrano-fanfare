@@ -16,6 +16,14 @@ module Capistrano::Fanfare::Defaults
 
       default_run_options[:pty] = true
 
+      on :load do
+        if exists?(:foreman_cmd)        # foreman recipe has been loaded
+          set :rake, "#{fetch(:foreman_cmd)} run rake"
+        elsif exists?(:bundle_shebang)  # bundler recipe has been loaded
+          set :rake, "rake"
+        end
+      end
+
       ##
       # Determines deployment environment or run mode to help database naming,
       # deploy directories, etc.

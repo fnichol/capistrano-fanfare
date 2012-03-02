@@ -2,6 +2,8 @@ require 'minitest/autorun'
 require 'minitest/capistrano'
 require 'capistrano/fanfare'
 require 'capistrano/fanfare/defaults'
+require 'capistrano/fanfare/bundler'
+require 'capistrano/fanfare/foreman'
 
 describe Capistrano::Fanfare::Defaults do
   before do
@@ -137,6 +139,30 @@ describe Capistrano::Fanfare::Defaults do
   it "sets :shared_children to include tmp/sockets and tmp/sessions" do
     @config.fetch(:shared_children).
       must_equal %w{public/system log tmp/pids tmp/sockets tmp/sessions}
+  end
+
+  it "sets :rake to 'rake' if bundler recipe is loaded" do
+    Capistrano::Fanfare::Bundler.load_into(@config)
+    @config.trigger(:load)
+
+    @config.fetch(:rake).must_equal "rake"
+  end
+
+  it "sets :rake to 'foreman run rake' if foreman recipe is loaded" do
+    Capistrano::Fanfare::Foreman.load_into(@config)
+    @config.set :foreman_cmd, "da/foreman"
+    @config.trigger(:load)
+
+    @config.fetch(:rake).must_equal "da/foreman run rake"
+  end
+
+  it "sets :rake to 'foreman run rake' if foreman and bundler recipes are loaded" do
+    Capistrano::Fanfare::Foreman.load_into(@config)
+    Capistrano::Fanfare::Bundler.load_into(@config)
+    @config.set :foreman_cmd, "fman"
+    @config.trigger(:load)
+
+    @config.fetch(:rake).must_equal "fman run rake"
   end
 
   describe "for :deploy namespace" do

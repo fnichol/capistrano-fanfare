@@ -45,8 +45,6 @@ module Capistrano::Fanfare::Bundler
 
       require 'bundler/capistrano'
 
-      set(:rake) { "rake" }
-
       # =========================================================================
       # These are the tasks that are available to help with deploying web apps.
       # You can have cap give you a summary of them with `cap -T'.
