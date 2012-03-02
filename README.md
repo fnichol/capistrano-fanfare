@@ -116,20 +116,20 @@ There are several optional recipes that need additional gems in your Gemfile:
 * [info](#recipes-info):
   Deployment configuration information, available at a glance.
 
-### <a name="recipes-foundational"> Foundational
+### <a name="recipes-foundational"></a> Foundational
 
-#### <a name="recipes-git-style"> git_style
+#### <a name="recipes-git-style"></a> git_style
 
 > GitHub-style deployments, fully compatible with third party recipes.
 
 A Git style deployment strategy based on GitHub's
 [Deployment Script Spring Cleaning][github_spring] blog post.
 
-#### <a name="recipes-foreman"> foreman
+#### <a name="recipes-foreman"></a> foreman
 
 > Forget Unicorns, Resque workers, and God. Think processes.
 
-#### <a name="recipes-bundler"> bundler
+#### <a name="recipes-bundler"></a> bundler
 
 > Binstub `PATH`-aware deployments with custom shebangs and more.
 
@@ -137,56 +137,56 @@ Uses the delivered [Bundler][cap_bundler] implementation with support for
 shebangs, binstubs `PATH` inclusion, and a generated `bin/bundle` binstub
 script file.
 
-### <a name="recipes-core"> Core
+### <a name="recipes-core"></a> Core
 
-#### <a name="recipes-defaults"> defaults
+#### <a name="recipes-defaults"></a> defaults
 
 > Common baseline defaults and an augmented `deploy:cold`.
 
-#### <a name="recipes-multistage"> multistage
+#### <a name="recipes-multistage"></a> multistage
 
 > Deploy to multiple environments like `"staging"` and `"production"`.
 
 Uses the delivered [Capistrano multistage][cap_multistage] implementation with
 a few additional helpers.
 
-#### <a name="recipes-asssets"> assets
+#### <a name="recipes-asssets"></a> assets
 
 > Rails asset pipeline support: done!
 
-#### <a name="recipes-db-seed"> db_seed
+#### <a name="recipes-db-seed"></a> db_seed
 
 > Tracking deployments in Airbrake
 
-#### <a name="recipes-database-yaml"> database_yaml
+#### <a name="recipes-database-yaml"></a> database_yaml
 
 > No more database password baked in your code, leave that up to the server.
 
-### <a name="recipes-gravy"> Gravy
+### <a name="recipes-gravy"></a> Gravy
 
-#### <a name="recipes-ssh"> ssh
+#### <a name="recipes-ssh"></a> ssh
 
 > Connect to your infrastructure nodes without thinking.
 
-#### <a name="recipes-console"> console
+#### <a name="recipes-console"></a> console
 
 > Rails 2/3, Sinatra, and Rack consoles, running in one command.
 
-#### <a name="recipes-colors"> colors
+#### <a name="recipes-colors"></a> colors
 
 > Deploys, but prettier.
 
 > Rails console, ready for input in one command.
 
-#### <a name="recipes-campfire"> campfire
+#### <a name="recipes-campfire"></a> campfire
 
 > Notify your team of deployment and maintenace events.
 
-#### <a name="recipes-airbrake"> airbrake
+#### <a name="recipes-airbrake"></a> airbrake
 
 > Track your deployments in Airbrake/Hoptoad/Errbit
 
-#### <a name="recipes-info"> info
+#### <a name="recipes-info"></a> info
 
 > Deployment configuration, available at a glance.
 
