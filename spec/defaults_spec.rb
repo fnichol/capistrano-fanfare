@@ -113,7 +113,7 @@ describe Capistrano::Fanfare::Defaults do
   end
 
   it "sets :os_types to a list of OSes" do
-    @config.fetch(:os_types).must_equal [:darwin, :linux, :sunos]
+    @config.fetch(:os_types).must_equal [:darwin, :linux, :sunos, :mswin]
   end
 
   describe ":os_type" do

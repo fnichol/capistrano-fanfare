@@ -9,7 +9,7 @@ module Capistrano::Fanfare::Defaults
       set(:branch)      { ENV['BRANCH'] ? ENV['BRANCH'] : "master" }
       set(:deploy_to)   { "/srv/#{application}_#{deploy_env}" }
       set :ssh_options, { :forward_agent => true }
-      set :os_types,    [:darwin, :linux, :sunos]
+      set :os_types,    [:darwin, :linux, :sunos, :mswin]
       set(:os_type)     { capture("uname -s").chomp.downcase.to_sym }
 
       set :shared_children, %w{public/system log tmp/pids tmp/sockets tmp/sessions}
