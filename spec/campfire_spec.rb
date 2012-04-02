@@ -1,5 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/capistrano'
+require 'mocha'
 require 'capistrano/fanfare'
 require 'capistrano/fanfare/campfire'
 
@@ -27,6 +28,9 @@ describe Capistrano::Fanfare::Campfire do
     ENV['USER'] = 'filbert'
     ENV['_SPEC_REASON'] = ENV['REASON']
     ENV['REASON'] = "to deal with the tribbles"
+    ENV['_SPEC_CAMPFIRE_YAML_FILE'] = ENV['CAMPFIRE_YAML_FILE']
+    ENV['CAMPFIRE_YAML_FILE'] = File.join(
+      File.dirname(__FILE__), %w{fixtures campfire campfire.yml})
 
     @config.load do
       def puts(msg)
@@ -45,9 +49,36 @@ describe Capistrano::Fanfare::Campfire do
   after do
     ENV['USER'] = ENV.delete('_SPEC_USER')
     ENV['REASON'] = ENV.delete('_SPEC_REASON')
+    ENV['CAMPFIRE_YAML_FILE'] = ENV.delete('_CAMPFIRE_YAML_FILE')
   end
 
   describe "for variables" do
+    it "sets :campfire_yaml_file to the value from ENV['CAMPFIRE_YAML_FILE']" do
+      @config.fetch(:campfire_yaml_file).must_equal(File.expand_path(
+        File.join(File.dirname(__FILE__), %w{fixtures campfire campfire.yml})))
+    end
+
+    it "sets :campfire_yaml_file to ~/.campfire.yaml if no ENV var is set" do
+      ENV.delete('CAMPFIRE_YAML_FILE')
+      File.stubs(:exists?).with(File.expand_path('~/.campfire.yml')).returns(true)
+
+      @config.fetch(:campfire_yaml_file).must_equal(
+        File.expand_path('~/.campfire.yml'))
+    end
+
+    it "raises an exception if :campfire_yaml_file file does not exist" do
+      ENV['CAMPFIRE_YAML_FILE'] = "/path/to/nowhere"
+
+      proc { @config.trigger(:load) }.must_raise RuntimeError
+    end
+
+    it "loads the campfire configuration into the :campfire_options hash" do
+      @config.fetch(:campfire_options)[:account].must_equal("fitznuggets")
+      @config.fetch(:campfire_options)[:token].must_equal("abcdefg")
+      @config.fetch(:campfire_options)[:room].must_equal("nuggettalk")
+      @config.fetch(:campfire_options)[:ssl].must_equal(true)
+    end
+
     it "sets :campfire_pre_msg to a known default" do
       @config.set :application, 'wazup'
       @config.set :deploy_env, 'staging'

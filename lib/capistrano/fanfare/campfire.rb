@@ -11,6 +11,18 @@ module Capistrano::Fanfare::Campfire
           "Please ensure it is in your Gemfile."
       end
 
+      set(:campfire_yaml_file) do
+        yaml_file = File.expand_path(ENV['CAMPFIRE_YAML_FILE'] || '~/.campfire.yml')
+
+        if !File.exists?(yaml_file)
+          raise "File '#{yaml_file}' does not exist with campfire configuration."
+        end
+
+        yaml_file
+      end
+
+      set(:campfire_options)  { YAML.load_file(campfire_yaml_file) }
+
       set(:campfire_pre_msg) do
         [ ENV['USER'],
           %{is starting a deploy of},
@@ -45,6 +57,11 @@ module Capistrano::Fanfare::Campfire
 
       set :campfire_success_play, "pushit"
       set :campfire_fail_play,    "trombone"
+
+      # fail fast if campfire options cannot be loaded
+      on :load do
+        fetch(:campfire_options)
+      end
 
 
       # ========================================================================
