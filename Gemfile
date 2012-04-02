@@ -8,6 +8,10 @@ group :test do
   gem 'foreman'
   gem 'capistrano-campfire'
   gem 'airbrake'
+
+  gem 'growl'
+  gem 'guard'
+  gem 'guard-minitest'
 end
 
 platforms :jruby do
