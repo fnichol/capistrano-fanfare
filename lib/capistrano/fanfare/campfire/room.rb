@@ -33,8 +33,32 @@ module Capistrano
         end
 
         # Public: Returns the Integer room ID of the Campfire room.
+        #
+        # Returns the Integer room ID.
+        # Raises NotFound if a room cannot be found for the given name.
+        # Raises ConnectionError if an HTTP error occurs.
         def room_id
           @room_id ||= fetch_room_id
+        end
+
+        # Public: Posts a message into the campfire room.
+        #
+        # msg - A String message.
+        #
+        # Returns true if message is delivered.
+        # Raises ConnectionError if an HTTP error occurs.
+        def speak(msg)
+          send_message(msg)
+        end
+
+        # Public: Plays a sound into the campfire room.
+        #
+        # sound - A String representing the sound.
+        #
+        # Returns true if message is delivered.
+        # Raises ConnectionError if an HTTP error occurs.
+        def play(msg)
+          send_message(msg, 'SoundMessage')
         end
 
         private
@@ -75,6 +99,30 @@ module Capistrano
               find_room_in_json(MultiJson.decode(response.body))
             else
               raise ConnectionError
+            end
+          end
+        end
+
+        # Internal: Posts a message to the campfire room.
+        #
+        # msg   - The String message to send.
+        # type  - The String type of campfire message (default: TextMessage).
+        #
+        # Returns true if message is delivered.
+        # Raises ConnectionError if an HTTP error occurs.
+        def send_message(msg, type = 'TextMessage')
+          connect do |http|
+            request = http_request(:post, "/room/#{room_id}/speak.json")
+            request.body = MultiJson.encode(
+              { :message => { :body => msg, :type => type } })
+            response = http.request(request)
+
+            case response
+            when Net::HTTPCreated
+              true
+            else
+              raise ConnectionError,
+                "Error sending message '#{msg}' (#{response.class})"
             end
           end
         end

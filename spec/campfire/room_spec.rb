@@ -3,6 +3,10 @@ require 'webmock/minitest'
 require 'capistrano/fanfare/campfire/room'
 
 describe Capistrano::Fanfare::Campfire::Room do
+  WRAPPED_ERRORS = [Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError,
+      Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError,
+      SocketError, OpenSSL::SSL::SSLError, Errno::ECONNREFUSED]
+
   let(:opts) do
     { :account => 'zubzub', :token => 'yepyep',
       :room => 'myroom', :ssl => true }
@@ -29,6 +33,20 @@ describe Capistrano::Fanfare::Campfire::Room do
 
   def stub_rooms_error!(error)
     stub_request(:get, "https://yepyep:X@zubzub.campfirenow.com/rooms.json").
+      with(:headers => {'Content-Type' => 'application/json'}).
+      to_raise(error)
+  end
+
+  def stub_speak!(msg, type = 'TextMessage')
+    stub_request(:post, "https://yepyep:X@zubzub.campfirenow.com/room/123456/speak.json").
+      with(:headers => {'Content-Type' => 'application/json'},
+           :body => {:message => {:body => msg, :type => type}}).
+      to_return(:status => 201, :headers => {},
+                :body => fixture("speak").sub(/@@MESSAGE@@/, msg))
+  end
+
+  def stub_speak_error!(error)
+    stub_request(:post, "https://yepyep:X@zubzub.campfirenow.com/room/123456/speak.json").
       with(:headers => {'Content-Type' => 'application/json'}).
       to_raise(error)
   end
@@ -67,14 +85,73 @@ describe Capistrano::Fanfare::Campfire::Room do
         Capistrano::Fanfare::Campfire::Room::ConnectionError)
     end
 
-    [Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError,
-      Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError,
-      SocketError, OpenSSL::SSL::SSLError, Errno::ECONNREFUSED
-    ].each do |error|
+    WRAPPED_ERRORS.each do |error|
       it "wraps #{error} and raises a ConnectionError" do
         stub_rooms_error!(error)
 
         proc { subject.room_id }.must_raise(
+          Capistrano::Fanfare::Campfire::Room::ConnectionError)
+      end
+    end
+  end
+
+  describe "#speak" do
+    let(:subject) { Capistrano::Fanfare::Campfire::Room.new(opts) }
+
+    before do
+      # stub out #room_id since we don't care about this API call
+      def subject.room_id ; 123456 ; end
+    end
+
+    it "calls the speak API with a message" do
+      stub = stub_speak!("talking about talking")
+      subject.speak "talking about talking"
+
+      assert_requested(stub)
+    end
+
+    it "returns true when message is delivered" do
+      stub = stub_speak!("talking about talking")
+
+      subject.speak("talking about talking").must_equal true
+    end
+
+    WRAPPED_ERRORS.each do |error|
+      it "wraps #{error} and raises a ConnectionError" do
+        stub_speak_error!(error)
+
+        proc { subject.speak "nope" }.must_raise(
+          Capistrano::Fanfare::Campfire::Room::ConnectionError)
+      end
+    end
+  end
+
+  describe "#play" do
+    let(:subject) { Capistrano::Fanfare::Campfire::Room.new(opts) }
+
+    before do
+      # stub out #room_id since we don't care about this API call
+      def subject.room_id ; 123456 ; end
+    end
+
+    it "calls the play API with a sound" do
+      stub = stub_speak!("tada", "SoundMessage")
+      subject.play "tada"
+
+      assert_requested(stub)
+    end
+
+    it "returns true when message is delivered" do
+      stub = stub_speak!("tada", "SoundMessage")
+
+      subject.play("tada").must_equal true
+    end
+
+    WRAPPED_ERRORS.each do |error|
+      it "wraps #{error} and raises a ConnectionError" do
+        stub_speak_error!(error)
+
+        proc { subject.play "tada" }.must_raise(
           Capistrano::Fanfare::Campfire::Room::ConnectionError)
       end
     end

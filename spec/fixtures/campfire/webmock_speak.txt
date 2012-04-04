@@ -1,0 +1,11 @@
+{
+  "message": {
+    "body": "@@MESSAGE@@",
+    "created_at": "2012/04/04 18:11:36 +0000",
+    "id": 999999999,
+    "room_id": 123456,
+    "starred": false,
+    "type": "TextMessage",
+    "user_id": 666
+  }
+}
