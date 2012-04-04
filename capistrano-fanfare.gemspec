@@ -18,6 +18,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "capistrano", "~> 2.11.1"
   gem.add_dependency "capistrano_colors", "~> 0.5"
   gem.add_dependency "sushi", "~> 0.0.2"
+  gem.add_dependency "multi_json", "~> 1.0"
 
   gem.add_development_dependency "minitest", "~> 2.11.2"
   gem.add_development_dependency "minitest-capistrano", "~> 0.0"

@@ -1,5 +1,5 @@
 require 'net/https'
-require 'json'
+require 'multi_json'
 
 module Capistrano
   module Fanfare
@@ -68,11 +68,11 @@ module Capistrano
         # Raises ConnectionError if an HTTP error occurs.
         def fetch_room_id
           connect do |http|
-            response = http.request(http_request("/rooms.json"))
+            response = http.request(http_request(:get, "/rooms.json"))
 
             case response
             when Net::HTTPOK
-              find_room_in_json(JSON.parse(response.body))
+              find_room_in_json(MultiJson.decode(response.body))
             else
               raise ConnectionError
             end
@@ -117,7 +117,7 @@ module Capistrano
         # Internal: Returns a Net::HTTPRequest object initialized with
         # authentication and content headers set.
         #
-        # verb  - A Symbol representing an HTTP verb (default: :get).
+        # verb  - A Symbol representing an HTTP verb.
         # path  - The String path of the request.
         #
         # Examples
@@ -126,7 +126,7 @@ module Capistrano
         #   http_request(:post, "/room/1/speak.json")
         #
         # Returns a Net::HTTPRequest object.
-        def http_request(verb = :get, path)
+        def http_request(verb, path)
           klass = klass = Net::HTTP.const_get(verb.to_s.capitalize)
           request = klass.new(path)
           request.basic_auth(token, "X")

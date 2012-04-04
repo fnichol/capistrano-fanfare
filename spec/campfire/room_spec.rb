@@ -10,30 +10,26 @@ describe Capistrano::Fanfare::Campfire::Room do
 
   let(:stub_rooms!) do
     stub_request(:get, "https://yepyep:X@zubzub.campfirenow.com/rooms.json").
-      with(:headers => {'Accept'=>'*/*', 'Content-Type'=>'application/json',
-           'User-Agent'=>'Ruby'}).
+      with(:headers => {'Content-Type' => 'application/json'}).
       to_return(:status => 200, :body => fixture("rooms"), :headers => {})
   end
 
   let(:stub_rooms_no_room!) do
     stub_request(:get, "https://yepyep:X@zubzub.campfirenow.com/rooms.json").
-      with(:headers => {'Accept'=>'*/*', 'Content-Type'=>'application/json',
-           'User-Agent'=>'Ruby'}).
+      with(:headers => {'Content-Type' => 'application/json'}).
       to_return(:status => 200, :body => fixture("no_rooms"), :headers => {})
   end
 
   let(:stub_rooms_invalid_token!) do
     stub_request(:get, "https://yepyep:X@zubzub.campfirenow.com/rooms.json").
-      with(:headers => {'Accept'=>'*/*', 'Content-Type'=>'application/json',
-           'User-Agent'=>'Ruby'}).
+      with(:headers => {'Content-Type' => 'application/json'}).
       to_return(:status => 401, :body => "HTTP Basic: Access denied.\n",
                 :headers => {})
   end
 
   def stub_rooms_error!(error)
     stub_request(:get, "https://yepyep:X@zubzub.campfirenow.com/rooms.json").
-      with(:headers => {'Accept'=>'*/*', 'Content-Type'=>'application/json',
-           'User-Agent'=>'Ruby'}).
+      with(:headers => {'Content-Type' => 'application/json'}).
       to_raise(error)
   end
 
