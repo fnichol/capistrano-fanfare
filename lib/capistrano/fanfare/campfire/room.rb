@@ -18,6 +18,9 @@ module Capistrano
         # Public: Returns the String room name.
         attr_reader :room
 
+        # Public: Returns the API token String for a user.
+        attr_reader :ssl
+
         # Public: Initializes a Room from a Hash of configuration options.
         #
         # options - A Hash of options to set up the Room (default: {}):
@@ -25,8 +28,10 @@ module Capistrano
         #           :room     - The String room name, not the room ID.
         #           :token    - The API token String for a user.
         #           :ssl      - A truthy object which is true when SSL is
-        #                       required.
+        #                       required (default: true).
         def initialize(options = {})
+          options = { :ssl => true }.merge(options)
+
           [:account, :room, :token, :ssl].each do |option|
             instance_variable_set "@#{option}", options[option]
           end
@@ -71,9 +76,6 @@ module Capistrano
 
         # Internal: Returns the API token String for a user.
         attr_reader :token
-
-        # Internal: Returns the API token String for a user.
-        attr_reader :ssl
 
         # Internal: Returns the campfire hostname with subdomain.
         def host

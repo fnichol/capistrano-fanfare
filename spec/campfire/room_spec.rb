@@ -61,6 +61,12 @@ describe Capistrano::Fanfare::Campfire::Room do
       room.account.must_equal 'zubzub'
       room.room.must_equal    'myroom'
     end
+
+    it "defaults to SSL mode enabled" do
+      opts.delete(:ssl)
+      room = Capistrano::Fanfare::Campfire::Room.new(opts)
+      room.ssl.must_equal true
+    end
   end
 
   describe "#room_id" do
