@@ -1,0 +1,22 @@
+{
+  "rooms": [
+    {
+      "created_at": "2012/01/01 00:01:02 +0000",
+      "id": 123456,
+      "locked": false,
+      "membership_limit": 4,
+      "name": "nuggettalk",
+      "topic": "Pop go the nuggets",
+      "updated_at": "2012/02/23 02:21:49 +0000"
+    },
+    {
+      "created_at": "2011/01/01 00:02:03 +0000",
+      "id": 666666,
+      "locked": false,
+      "membership_limit": 12,
+      "name": "myroom",
+      "topic": "There is only one test",
+      "updated_at": "2011/12/05 16:23:40 +0000"
+    }
+  ]
+}
