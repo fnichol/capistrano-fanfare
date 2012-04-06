@@ -24,5 +24,4 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "minitest-capistrano", "~> 0.0"
   gem.add_development_dependency "timecop", "~> 0.3"
   gem.add_development_dependency "mocha", "~> 0.10.5"
-  gem.add_development_dependency "webmock", "~> 1.8.5"
 end
