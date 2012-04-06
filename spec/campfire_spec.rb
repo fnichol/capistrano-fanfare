@@ -79,6 +79,13 @@ describe Capistrano::Fanfare::Campfire do
       @config.fetch(:campfire_options)[:ssl].must_equal(true)
     end
 
+    it "sets :campfire_room to a campfire room object" do
+      Campy::Room.expects(:new).with(:account => "fitznuggets",
+        :room => "nuggettalk", :token => "abcdefg", :ssl => true)
+
+      @config.fetch(:campfire_room)
+    end
+
     it "sets :campfire_pre_msg to a known default" do
       @config.set :application, 'wazup'
       @config.set :deploy_env, 'staging'

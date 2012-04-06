@@ -4,10 +4,10 @@ module Capistrano::Fanfare::Campfire
   def self.load_into(configuration)
     configuration.load do
       begin
-        require 'capistrano/campfire'
+        require 'campy'
 
       rescue LoadError => error
-        raise "capistrano-campfire gem could not be loaded: (#{error.message}). " +
+        raise "campy gem could not be loaded: (#{error.message}). " +
           "Please ensure it is in your Gemfile."
       end
 
@@ -22,6 +22,7 @@ module Capistrano::Fanfare::Campfire
       end
 
       set(:campfire_options)  { YAML.load_file(campfire_yaml_file) }
+      set(:campfire_room)     { Campy::Room.new(campfire_options) }
 
       set(:campfire_pre_msg) do
         [ ENV['USER'],
