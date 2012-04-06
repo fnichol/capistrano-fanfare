@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "sushi", "~> 0.0.2"
   gem.add_dependency "multi_json", "~> 1.0"
 
-  gem.add_development_dependency "minitest", "~> 2.11.2"
+  gem.add_development_dependency "minitest", "~> 2.12.0"
   gem.add_development_dependency "minitest-capistrano", "~> 0.0"
   gem.add_development_dependency "timecop", "~> 0.3"
   gem.add_development_dependency "mocha", "~> 0.10.5"
