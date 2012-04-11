@@ -103,7 +103,7 @@ module Capistrano::Fanfare::Campfire
         desc <<-DESC
           [internal] Posts a message in Campfire before a deploy has started.
         DESC
-        task :pre_deploy do
+        task :pre_deploy, :roles => :app, :only => { :primary => true } do
           @deploy_start_time = Time.now
           speak fetch(:campfire_pre_msg)
         end
@@ -112,7 +112,7 @@ module Capistrano::Fanfare::Campfire
           [internal] Posts a message and plays a clip after a successful
           deployment.
         DESC
-        task :successful_deploy do
+        task :successful_deploy, :roles => :app, :only => { :primary => true } do
           elapsed = @deploy_start_time ? Time.now - @deploy_start_time : 0
 
           speak "#{fetch(:campfire_success_msg)} (#{elapsed} seconds)"
@@ -123,7 +123,7 @@ module Capistrano::Fanfare::Campfire
           [internal] Posts a message and plays a clip after a failed
           deployment.
         DESC
-        task :rollback_deploy do
+        task :rollback_deploy, :roles => :app, :only => { :primary => true } do
           speak fetch(:campfire_fail_msg)
           play fetch(:campfire_fail_play)
         end
@@ -131,14 +131,14 @@ module Capistrano::Fanfare::Campfire
         desc <<-DESC
           [internal] Posts a message in Campfire when the app is being brought down.
         DESC
-        task :web_disable do
+        task :web_disable, :roles => :app, :only => { :primary => true } do
           speak fetch(:campfire_web_disable_msg)
         end
 
         desc <<-DESC
           [internal] Posts a message in Campfire when the app is being brought up.
         DESC
-        task :web_enable do
+        task :web_enable, :roles => :app, :only => { :primary => true } do
           speak fetch(:campfire_web_enable_msg)
         end
       end
