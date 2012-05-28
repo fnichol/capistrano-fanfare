@@ -105,8 +105,15 @@ load Gem.bin_path('bundler', 'bundle')
       @config.must_have_task "bundle:install"
     end
 
-    it "calls bundle:install task after deploy:finalize_update" do
-      @config.must_have_callback_after "deploy:finalize_update", "bundle:install"
+    # trigger was changed from :after to :before in Bundler v1.1.4, so we
+    # should be okay with both.
+    # source: https://github.com/carlhuda/bundler/commit/5d518bec98d44e474eca37a0fe5fe9b79b5afb19
+    it "calls bundle:install task after (or before) deploy:finalize_update" do
+      results = []
+      results.concat(@config.find_callback(:before, "deploy:finalize_update"))
+      results.concat(@config.find_callback(:after, "deploy:finalize_update"))
+
+      results.map { |result| result.source }.must_include "bundle:install"
     end
 
     describe "task :create_binstub_script" do
