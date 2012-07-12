@@ -201,6 +201,14 @@ describe Capistrano::Fanfare::Campfire do
       it "gets called before deploy task" do
         @config.must_have_callback_before "deploy", "campfire:pre_deploy"
       end
+
+      it "gets called before deploy:migrations task" do
+        @config.must_have_callback_before "deploy:migrations", "campfire:pre_deploy"
+      end
+
+      it "gets called before deploy:cold task" do
+        @config.must_have_callback_before "deploy:cold", "campfire:pre_deploy"
+      end
     end
 
     describe "task :successful_deploy" do
@@ -224,6 +232,10 @@ describe Capistrano::Fanfare::Campfire do
 
       it "gets called after deploy:migrations task" do
         @config.must_have_callback_after "deploy:migrations", "campfire:successful_deploy"
+      end
+
+      it "gets called after deploy:cold task" do
+        @config.must_have_callback_after "deploy:cold", "campfire:successful_deploy"
       end
     end
 

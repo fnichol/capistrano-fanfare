@@ -146,7 +146,10 @@ module Capistrano::Fanfare::Campfire
       unless ENV['QUIET'].to_i > 0
         before  "deploy", "campfire:pre_deploy"
         after   "deploy", "campfire:successful_deploy"
+        before  "deploy:migrations", "campfire:pre_deploy"
         after   "deploy:migrations", "campfire:successful_deploy"
+        before  "deploy:cold", "campfire:pre_deploy"
+        after   "deploy:cold", "campfire:successful_deploy"
         before  "deploy:web:disable", "campfire:web_disable"
         before  "deploy:web:enable", "campfire:web_enable"
       end
