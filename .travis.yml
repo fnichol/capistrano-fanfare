@@ -7,6 +7,5 @@ rvm:
   - ree
   - rbx-18mode
   - jruby-18mode
-  - ruby-head
   - jruby-head
 env: JRUBY_OPTS=-Xcext.enabled=true
