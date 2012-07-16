@@ -11,6 +11,13 @@ module Capistrano
       def fanfare_recipe(recipe)
         require "capistrano/fanfare/#{recipe}"
       end
+
+      def fanfare_require(gem_name, path = gem_name)
+        require path
+      rescue LoadError => error
+        raise "#{gem_name} gem could not be loaded: (#{error.message}). " +
+          "Please ensure it is in your Gemfile."
+      end
     end
   end
 end

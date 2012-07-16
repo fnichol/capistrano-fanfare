@@ -3,13 +3,7 @@ require 'capistrano'
 module Capistrano::Fanfare::Campfire
   def self.load_into(configuration)
     configuration.load do
-      begin
-        require 'campy'
-
-      rescue LoadError => error
-        raise "campy gem could not be loaded: (#{error.message}). " +
-          "Please ensure it is in your Gemfile."
-      end
+      fanfare_require 'campy'
 
       set(:campfire_yaml_file) do
         yaml_file = File.expand_path(ENV['CAMPFIRE_YAML_FILE'] || '~/.campfire.yml')

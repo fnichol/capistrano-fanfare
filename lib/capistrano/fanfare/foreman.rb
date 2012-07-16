@@ -1,17 +1,11 @@
 require 'capistrano'
 require 'capistrano/fanfare/foreman/strategy'
 
-begin
-  require 'foreman/procfile'
-
-rescue LoadError => error
-  raise "Foreman gem could not be loaded: (#{error.message}). " +
-    "Please ensure it is in your Gemfile."
-end
-
 module Capistrano::Fanfare::Foreman
   def self.load_into(configuration)
     configuration.load do
+      fanfare_require 'foreman', 'foreman/procfile'
+
       set(:local_procfile)      { ENV['PROCFILE'] || "Procfile" }
       set(:user_home)           { capture("echo $HOME").chomp }
 
