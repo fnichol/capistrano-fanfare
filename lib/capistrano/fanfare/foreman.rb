@@ -106,34 +106,34 @@ module Capistrano::Fanfare::Foreman
           end
 
           namespace :start do
-            procfile.entries.each do |entry|
+            procfile.entries do |name, command|
               send :desc, <<-DESC
-                Starts #{entry.name} processes managed by the Procfile.
+                Starts #{name} processes managed by the Procfile.
               DESC
-              send :task, entry.name, :roles => :app, :except => { :no_release => true } do
-                foreman_strategy.start(entry.name)
+              send :task, name, :roles => :app, :except => { :no_release => true } do
+                foreman_strategy.start(name)
               end
             end
           end
 
           namespace :stop do
-            procfile.entries.each do |entry|
+            procfile.entries do |name, command|
               send :desc, <<-DESC
-                Stops #{entry.name} processes managed by the Procfile.
+                Stops #{name} processes managed by the Procfile.
               DESC
-              send :task, entry.name, :roles => :app, :except => { :no_release => true } do
-                foreman_strategy.stop(entry.name)
+              send :task, name, :roles => :app, :except => { :no_release => true } do
+                foreman_strategy.stop(name)
               end
             end
           end
 
           namespace :restart do
-            procfile.entries.each do |entry|
+            procfile.entries do |name, command|
               send :desc, <<-DESC
-                Restarts #{entry.name} processes managed by the Procfile.
+                Restarts #{name} processes managed by the Procfile.
               DESC
-              send :task, entry.name, :roles => :app, :except => { :no_release => true } do
-                foreman_strategy.restart(entry.name)
+              send :task, name, :roles => :app, :except => { :no_release => true } do
+                foreman_strategy.restart(name)
               end
             end
           end

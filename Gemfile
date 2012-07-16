@@ -5,7 +5,7 @@ gemspec
 
 group :test do
   gem 'rake', '~> 0.9'
-  gem 'foreman'
+  gem 'foreman', '>= 0.48.0'
   gem 'campy'
   gem 'airbrake'
 
