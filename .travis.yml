@@ -3,6 +3,8 @@ language: ruby
 matrix:
   allow_failures:
     - rvm: ruby-head
+    - rvm: rbx-19mode
+    - rvm: rbx-18mode
 
 rvm:
   - 1.9.3
