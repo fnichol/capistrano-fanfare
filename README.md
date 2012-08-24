@@ -75,7 +75,7 @@ There are several optional recipes that need additional gems in your Gemfile:
 
     group :development do
       gem 'capistrano-fanfare'
-      gem 'capistrano-campfire'
+      gem 'campy'
     end
 
 ## <a name="recipes"></a> Recipes
