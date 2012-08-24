@@ -38,6 +38,7 @@ Create a `Capfile` that looks like:
     fanfare_recipe 'colors'
     fanfare_recipe 'ssh'
     fanfare_recipe 'console'
+    fanfare_recipe 'log'
     fanfare_recipe 'campfire'
     fanfare_recipe 'airbrake'
 
@@ -107,6 +108,8 @@ There are several optional recipes that need additional gems in your Gemfile:
   Connect to your infrastructure nodes without thinking.
 * [console](#recipes-console):
   Rails 2/3, Sinatra, and Rack consoles, running in one command.
+* [log](#recipes-log):
+  Ability to tail logs and load logs into a local editor.
 * [colors](#recipes-colors):
   Deploys, but prettier.
 * [campfire](#recipes-campfire):
@@ -171,6 +174,10 @@ a few additional helpers.
 #### <a name="recipes-console"></a> console
 
 > Rails 2/3, Sinatra, and Rack consoles, running in one command.
+
+#### <a name="recipes-log"></a> log
+
+> Ability to tail logs and load logs into a local editor.
 
 #### <a name="recipes-colors"></a> colors
 
